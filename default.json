@@ -1,0 +1,64 @@
+{
+  "defaults": {
+    "ignoreError": false,
+    "markup": "pango"
+  },
+  "blocks": [
+    {
+      "type": "legacy",
+      "interval": 900,
+      "separator": true,
+      "script": "~/.config/i3/blocks/weather",
+      "color": "#CD64FF"
+    },
+    {
+      "type": "legacy",
+      "interval": 30,
+      "separator": false,
+      "script": "~/.config/i3/blocks/cpu_usage",
+      "color": "#81AEFA"
+    },
+    {
+      "type": "legacy",
+      "interval": 5,
+      "separator": false,
+      "script": "~/.config/i3/blocks/load_average",
+      "color": "#81AEFA"
+    },
+    {
+      "type": "legacy",
+      "interval": 5,
+      "separator": false,
+      "script": "~/.config/i3/blocks/memory",
+      "color": "#81AEFA"
+    },
+    {
+      "type": "legacy",
+      "interval": 20,
+      "separator": true,
+      "script": "/usr/lib/i3blocks/temperature",
+      "color": "#81AEFA"
+    },
+    {
+      "type": "legacy",
+      "interval": 900,
+      "separator": true,
+      "script": "~/.config/i3/blocks/disk",
+      "color": "#FE8F11"
+    },
+    {
+      "type": "legacy",
+      "interval": 60,
+      "separator": false,
+      "script": "~/.config/i3/blocks/wifi",
+      "color": "#FE8F11"
+    },
+    {
+      "type": "legacy",
+      "interval": 2,
+      "separator": false,
+      "script": "~/.config/i3/blocks/bandwidth",
+      "color": "#FE8F11"
+    }
+  ]
+}
