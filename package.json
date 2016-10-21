@@ -9,7 +9,7 @@
     "clean": "rimraf build",
     "lint": "tslint --force --format verbose \"src/**/*.ts\" \"test/**/*.ts\" ",
     "pack": "npm run clean && webpack",
-    "bin": "npm run pack && echo '#!/usr/bin/env node' > ty3bar && cat build/ty3bar.js >> ty3bar && chmod +x ty3bar"
+    "build": "npm run pack && echo '#!/usr/bin/env node' > ty3bar && cat build/ty3bar.js >> ty3bar && chmod +x ty3bar"
   },
   "dependencies": {
     "@types/minimist": "^1.1.29",

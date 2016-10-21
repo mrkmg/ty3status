@@ -2,6 +2,7 @@ import Block from "./lib/block";
 import {ICommandRunnerData} from "./lib/command-runners/command-runner";
 import configParser from "./lib/config-parser";
 import getDefaultConfigPath from "./lib/get-default-config-path";
+import Logger from "./lib/logger";
 import {ITy3CLIArguments, default as parseArgs} from "./lib/parse-args";
 import {IBlockOutput, IBlocksConfig} from "./models/config-types";
 import {Ty3Error} from "./models/ty3error";
@@ -14,6 +15,7 @@ let args: ITy3CLIArguments;
 let configPath: string;
 let config: IBlocksConfig;
 let blocks: Array<Block> = [];
+let originalOutputs: Array<IBlockOutput> = [];
 let output: Array<IBlockOutput> = [];
 
 try {
@@ -53,20 +55,23 @@ function buildBlocks() {
         blocks.push(block);
 
         block.on("data", (data: ICommandRunnerData) => {
-            output[i] = xtend(output[i], data);
+            output[i] = xtend(originalOutputs[i], data);
             writeOutput();
         });
 
         block.on("error", onError);
 
-        output.push({
+        let initialOutput: IBlockOutput = {
             color: config.blocks[i].color,
             full_text: "",
             markup: config.blocks[i].markup,
             name: i.toString(),
             separator: defaultValue(config.blocks[i].separator, false),
             separator_width: defaultValue(config.blocks[i].separatorWidth, 10),
-        });
+        };
+
+        output.push(initialOutput);
+        originalOutputs.push(initialOutput);
     }
 }
 
@@ -126,21 +131,41 @@ function onInput(input: Buffer) {
     inputCache.push(input.toString());
 
     if (input.indexOf(EOL) !== -1) {
-        let [fullInput, ...remainder] = inputCache.join("").trim().split(EOL);
-        inputCache = remainder;
-        onEvent(fullInput);
+        let events = inputCache.join("").trim().replace(/},{/, `}${EOL}{`).split(EOL);
+        for (let i = 0; i < events.length; i++) {
+            let event = events[i];
+            // Sent Initially, not an actual event
+            if (event === "[") {
+                continue;
+            }
+
+            // Remove comma at start of string
+            if (event.substr(0, 1) === ",") {
+                event = event.substr(1);
+            }
+
+            onEvent(event);
+        }
+        inputCache = [];
     }
 }
 
 function onEvent(event: string) {
-    event = event.replace(/'/g, "\"");
-    let jsonEvent = <II3Event> JSON.parse(event.replace(/'/, "\""));
-    let index = parseInt(jsonEvent.name, 10);
+    try {
+        event = event.replace(/'/g, "\"");
+        let jsonEvent = <II3Event> JSON.parse(event.replace(/'/, "\""));
+        let index = parseInt(jsonEvent.name, 10);
 
-    if (index >= 0 && index < blocks.length) {
-        let block = blocks[index];
-        block.click(jsonEvent.button);
+        if (index >= 0 && index < blocks.length) {
+            let block = blocks[index];
+            block.click(jsonEvent.button);
+        }
+
+        Logger.log(`LOG: Event: ${event}`);
+    } catch (err) {
+        Logger.debug(`Err main:onEvent ${err.message} ${event}`);
     }
+
 }
 
 function onError(error: Error) {
