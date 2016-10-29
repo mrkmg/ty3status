@@ -1,4 +1,4 @@
-import {EBlockConfigType, IBlocksConfig, IBlockConfig} from "../models/config-types";
+import {EBlockConfigType, IBlockConfig, IBlocksConfig} from "../models/config-types";
 import {Ty3Error} from "../models/ty3error";
 import {readFileSync} from "fs";
 import {EOL} from "os";
@@ -25,28 +25,39 @@ export class ConfigParser {
     }
 
     private readFile() {
-        this.fileContents = readFileSync(this.filePath).toString();
+        try {
+            this.fileContents = readFileSync(this.filePath).toString();
+        } catch (err) {
+            throw new ConfigFileError(this.filePath, err);
+        }
     }
 
     private readJson() {
-        let json: any = JSON.parse(this.fileContents);
+        try {
+            let json: any = JSON.parse(this.fileContents);
 
-        // Convert string to enums
-        if ("blocks" in json && Array.isArray(json.blocks)) {
-            for (let i = 0; i < json.blocks.length; i++) {
-                if ("type" in json.blocks[i]) {
-                    json.blocks[i].type = EBlockConfigType[json.blocks[i].type];
+            // Convert string to enums
+            if ("blocks" in json && Array.isArray(json.blocks)) {
+                for (let i = 0; i < json.blocks.length; i++) {
+                    if ("type" in json.blocks[i]) {
+                        json.blocks[i].type = EBlockConfigType[json.blocks[i].type];
+                    }
                 }
             }
-        }
 
-        this.fileJson = json;
+            this.fileJson = json;
+        } catch (err) {
+            throw new ConfigFileError(this.filePath, err);
+        }
     }
 
     private mergeDefaults() {
         let reqDefaults: IBlockConfig = {
             ignoreError: true,
             markup: "none",
+            maxRetries: 20,
+            retryDelay: 1000,
+            separator: true,
             type: EBlockConfigType.legacy,
         };
 
@@ -126,10 +137,12 @@ export class ConfigParser {
                             });
                             continue;
                         }
-                        if (block.interval <= 0) {
+                        break;
+                    case "signal":
+                        if (typeof block.signal !== "string") {
                             this.parseErrors.push({
-                                error: `Must be greater than 0: ${block.interval}`,
-                                param: `${path}.interval`,
+                                error: `Not a string: ${block.interval}`,
+                                param: `${path}.signal`,
                             });
                             continue;
                         }
@@ -207,6 +220,24 @@ export class ConfigParser {
                             continue;
                         }
                         break;
+                    case "maxRetries":
+                        if (typeof block.maxRetries !== "number") {
+                            this.parseErrors.push({
+                                error: `Not a number: ${block.maxRetries}`,
+                                param: `${path}.maxRetries`,
+                            });
+                            continue;
+                        }
+                        break;
+                    case "retryDelay":
+                        if (typeof block.retryDelay !== "number") {
+                            this.parseErrors.push({
+                                error: `Not a number: ${block.retryDelay}`,
+                                param: `${path}.retryDelay`,
+                            });
+                            continue;
+                        }
+                        break;
                     default:
                         this.parseErrors.push({
                             error: `Unknown key: ${prop}`,
@@ -244,6 +275,19 @@ export class ConfigParser {
                 });
             }
         }
+    }
+}
+
+export class ConfigFileError extends Ty3Error {
+    constructor(private file: string, private originalError: Error) {
+        super("File Read Error");
+    }
+
+    public display() {
+        super.display();
+
+        process.stderr.write(`Failed to read ${this.file}${EOL}`);
+        process.stderr.write(this.originalError.message);
     }
 }
 

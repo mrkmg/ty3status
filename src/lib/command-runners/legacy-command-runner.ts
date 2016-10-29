@@ -6,22 +6,24 @@ import {EventEmitter} from "events";
 import {EOL} from "os";
 import {clearInterval, clearTimeout, setInterval, setTimeout} from "timers";
 import xtend = require("xtend");
-import Timer = NodeJS.Timer;
 
 export default class LegacyShellCommandRunner extends EventEmitter implements ICommandRunner {
     private process: ChildProcess;
     private running: boolean = false;
     private currentData: string[];
-    private timer: Timer = null;
+    private timer: NodeJS.Timer = null;
 
     constructor(private command: string, private interval: number = 30000, private instance?: string) {
         super();
     }
 
     public start(): void {
+        this.runProcess({});
+
         if (!this.timer) {
-            this.runProcess({});
-            setInterval(() => this.runProcess(), this.interval);
+            if (this.interval > 0) {
+                setInterval(() => this.runProcess({}), this.interval);
+            }
         }
     }
 
@@ -141,8 +143,8 @@ export default class LegacyShellCommandRunner extends EventEmitter implements IC
     }
 
     private getEnv(env: any) {
-        if (this.instance !== null) {
-            env.INSTANCE = this.instance;
+        if (this.instance) {
+            env.BLOCK_INSTANCE = this.instance;
         }
 
         return xtend(process.env, env);

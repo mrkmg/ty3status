@@ -1,4 +1,4 @@
-import {EBlockConfigType, IBlockConfig, IBlocksConfig} from "../models/config-types";
+import {EBlockConfigType, IBlockConfig} from "../models/config-types";
 import {
     CommandRunnerDataError,
     CommandRunnerRunError,
@@ -11,9 +11,11 @@ import LegacyShellCommandRunner from "./command-runners/legacy-command-runner";
 import ModuleCommandRunner from "./command-runners/module-command-runner";
 import PersistentCommandRunner from "./command-runners/persistent-command-runner";
 import {EventEmitter} from "events";
+import {setTimeout} from "timers";
 
 export default class Block extends EventEmitter implements IBlockEvents {
     private commandRunner: ICommandRunner;
+    private retryCount: number = 0;
 
     constructor(public config: IBlockConfig) {
         super();
@@ -53,6 +55,8 @@ export default class Block extends EventEmitter implements IBlockEvents {
     }
 
     private onData(data: ICommandRunnerData) {
+        this.retryCount = 0;
+
         if (this.config.prefix) {
             data.full_text = `${this.config.prefix}${data.full_text}`;
         }
@@ -78,6 +82,11 @@ export default class Block extends EventEmitter implements IBlockEvents {
             } else {
                 this.emit("error", err);
             }
+        }
+
+        if (this.config.maxRetries > this.retryCount) {
+            this.retryCount++;
+            setTimeout(() => this.start(), this.config.retryDelay);
         }
     }
 }

@@ -61,6 +61,12 @@ function buildBlocks() {
 
         block.on("error", onError);
 
+        if (config.blocks[i].signal) {
+            process.on(config.blocks[i].signal, () => {
+                block.start();
+            });
+        }
+
         let initialOutput: IBlockOutput = {
             color: config.blocks[i].color,
             full_text: "",

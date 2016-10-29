@@ -4,19 +4,23 @@ export interface IBlocksConfig {
 }
 
 export interface IBlockConfig {
+    ignoreError: boolean;
+    markup: string;
+    maxRetries: number;
+    retryDelay: number;
     type: EBlockConfigType;
-    script?: string;
-    module?: string;
-    params?: {[index: string]: string},
-    interval?: number;
+
     color?: string;
+    instance?: string;
+    interval?: number;
+    module?: string;
+    params?: {[index: string]: string};
+    postfix?: string;
+    prefix?: string;
+    script?: string;
     separator?: boolean;
     separatorWidth?: number;
-    prefix?: string;
-    postfix?: string;
-    instance?: string;
-    markup: string;
-    ignoreError: boolean;
+    signal?: string;
 }
 
 export enum EBlockConfigType {
@@ -27,10 +31,11 @@ export enum EBlockConfigType {
 
 export interface IBlockOutput {
     full_text: string;
-    short_text?: string;
+
+    color?: string;
     markup?: string;
     name?: string;
-    color?: string;
     separator?: boolean;
     separator_width?: number;
+    short_text?: string;
 }

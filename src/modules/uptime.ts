@@ -1,15 +1,15 @@
 import {IModule, IModuleDataFunction} from "../models/module-block";
-import Timer = NodeJS.Timer;
 import {uptime} from "os";
 import pad = require("pad");
 import xtend = require("xtend");
+import {clearInterval, setInterval} from "timers";
 
 export = (dataCallback: IModuleDataFunction, params: any) => {
     return new UptimeModule(dataCallback, params);
 };
 
 class UptimeModule implements IModule {
-    private timer: Timer;
+    private timer: NodeJS.Timer;
     private running: boolean = false;
 
     constructor(private dataCallback: IModuleDataFunction, private params: any) {
@@ -36,6 +36,10 @@ class UptimeModule implements IModule {
     }
 
     public clicked(button: number): void {
+        this.onTick();
+    }
+
+    public tick(): void {
         this.onTick();
     }
 

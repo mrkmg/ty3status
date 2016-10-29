@@ -1,13 +1,12 @@
 {
   "defaults": {
-    "ignoreError": false,
+    "ignoreError": true,
     "markup": "pango"
   },
   "blocks": [
     {
       "type": "legacy",
       "interval": 900,
-      "separator": true,
       "script": "~/.config/i3/blocks/weather",
       "color": "#CD64FF"
     },
@@ -16,7 +15,8 @@
       "interval": 30,
       "separator": false,
       "script": "~/.config/i3/blocks/cpu_usage",
-      "color": "#81AEFA"
+      "color": "#81AEFA",
+      "prefix": " "
     },
     {
       "type": "legacy",
@@ -30,35 +30,81 @@
       "interval": 5,
       "separator": false,
       "script": "~/.config/i3/blocks/memory",
-      "color": "#81AEFA"
+      "color": "#81AEFA",
+      "prefix": " "
     },
     {
       "type": "legacy",
       "interval": 20,
-      "separator": true,
       "script": "/usr/lib/i3blocks/temperature",
-      "color": "#81AEFA"
+      "color": "#81AEFA",
+      "prefix": " "
     },
     {
       "type": "legacy",
       "interval": 900,
-      "separator": true,
       "script": "~/.config/i3/blocks/disk",
-      "color": "#FE8F11"
+      "color": "#FE8F11",
+      "prefix": " "
     },
     {
       "type": "legacy",
       "interval": 60,
       "separator": false,
       "script": "~/.config/i3/blocks/wifi",
-      "color": "#FE8F11"
+      "color": "#FE8F11",
+      "instance": "wlp3s0"
     },
     {
       "type": "legacy",
       "interval": 2,
       "separator": false,
       "script": "~/.config/i3/blocks/bandwidth",
+      "instance": "wlp3s0",
+      "color": "#00FF00"
+    },
+    {
+      "type": "legacy",
+      "interval": 60,
+      "script": "~/.config/i3/blocks/ips",
+      "color": "#00FF00"
+    },
+    {
+      "type": "legacy",
+      "interval": 60,
+      "script": "~/.config/i3/blocks/vpn",
       "color": "#FE8F11"
+
+    },
+    {
+      "type": "legacy",
+      "signal": "SIGUSR2",
+      "instance": "Master",
+      "interval": 0,
+      "script": "~/.config/i3/blocks/volume",
+      "color": "#FFF169",
+      "prefix": " "
+    },
+    {
+      "type": "legacy",
+      "interval": 0,
+      "instance": "CAPS",
+      "signal": "SIGUSR2",
+      "script": "/usr/lib/i3blocks/keyindicator -c '#00FF00' -C '#8D8D8D'",
+      "separator": false
+    },
+    {
+      "type": "legacy",
+      "interval": 0,
+      "instance": "NUM",
+      "signal": "SIGUSR2",
+      "script": "/usr/lib/i3blocks/keyindicator -c '#00FF00' -C '#8D8D8D'"
+    },
+    {
+      "type": "legacy",
+      "interval": 1,
+      "script": "~/.config/i3/blocks/datetime",
+      "color": "#FFFFFF"
     }
   ]
 }

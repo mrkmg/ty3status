@@ -8,20 +8,21 @@
   "scripts": {
     "clean": "rimraf build",
     "lint": "tslint --force --format verbose \"src/**/*.ts\" \"test/**/*.ts\" ",
-    "pack": "npm run clean && webpack",
-    "build": "npm run pack && echo '#!/usr/bin/env node' > ty3bar && cat build/ty3bar.js >> ty3bar && chmod +x ty3bar"
+    "bin": "echo '#!/usr/bin/env node' > ./ty3bar && cat ./build/ty3bar.js >> ty3bar && chmod +x ./ty3bar",
+    "build": "webpack",
+    "build-watch": "webpack --watch"
   },
   "dependencies": {
     "@types/minimist": "^1.1.29",
-    "@types/node": "^6.0.45",
+    "@types/node": "^6.0.46",
     "default-value": "^1.0.0",
     "humanize-duration": "^3.9.1",
     "minimist": "^1.2.0",
+    "on-build-webpack": "^0.1.0",
     "pad": "^1.0.1",
     "rimraf": "^2.5.4",
     "source-map-support": "^0.4.5",
     "ts-loader": "^0.9.4",
-    "ts-node": "^1.4.3",
     "tslint": "^3.15.1",
     "typescript": "^2.0.3",
     "webpack": "^1.13.2",
