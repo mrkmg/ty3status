@@ -1,0 +1,14 @@
+defaults:
+  ignoreError: true
+  markup: pango
+
+blocks:
+- type: module
+  module: "/home/kgravier/develop/ty3bar-module-weather"
+  interval: 600
+  prefix: 'w'
+  separator: false
+  params:
+    lat: 42.4878
+    long: -83.0901
+    key: 4b3818b84abf58226bbd791e886817eb

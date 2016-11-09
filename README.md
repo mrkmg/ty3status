@@ -1,0 +1,335 @@
+ty3bar
+======
+
+ty3bar is a replacement for i3status, py3status, or i3blocks. ty3bar is written in typescript with first class support
+for javascript blocks, but allows for blocks to be written in any language.
+
+[TOC]: # 
+# Table of Contents
+- [Usage](#usage)
+    - [i3 Config](#i3-config)
+    - [ty3bar Config](#ty3bar-config)
+    - [Block Types](#block-types)
+- [ty3bar Modules](#ty3bar-modules)
+    - [Built In Modules](#built-in-modules)
+    - [External Modules](#external-modules)
+    - [Writing a module](#writing-a-module)
+- [Contributing](#contributing)
+- [License](#license)
+
+
+In order to install ty3bar, you will need nodejs and npm.
+
+First, clone the repo.
+
+    git clone https://github.com/mrkmg/ty3bar.git /tmp/ty3bar
+    
+Navigate to the repo.
+ 
+    cd /tmp/ty3bar
+    
+Install all dependencies.
+
+    npm install
+
+Next, you will need to build the executable.
+
+    npm run build
+    
+Finally, install the executable into your path.
+
+    sudo npm run install
+
+Thats it!
+
+## Usage
+
+### i3 Config
+
+You will need to update your i3 config to use ty3bar instead of i3status. You can do this by addeding or changing the
+`status_command` to `ty3bar`. See the following example.
+
+    bar {
+    	status_command ty3bar --config /path/to/config
+    	position top
+    }
+
+### ty3bar Config
+
+ty3bar uses yaml for its configuration file. A ty3bar configuration file defines default for all blocks and then a list
+of blocks. A block is one item that is shown in your bar.
+
+
+**Block**
+
+A block has the following properties:
+
+- **ignoreError** (bool) - If this block errors, should we display the error or not.
+- **markup** ("pango" or null) - If you want to use the pango markup.
+- **maxRetries** (number) - If the block errors, how many retries before giving up.
+- **retryDelay** (milliseconds) - How long to wait between retries if there is an error.
+- **type** ("legacy", "persistent", "module") - The type of block. See [Block Types](#block-types).
+- **color** (hex color) - The default color of the block.
+- **instance** (string) - The "BLOCK_INSTANCE" environment variable for legacy blocks.
+- **interval** (seconds) - How often the block should run. Set to -1 for a single run (do not run on an interval).
+- **module** (string) - Either a built-in module or the path to a ty3bar module. See [ty3bar-modules](#ty3bar-modules].
+- **params** (key: value object) - Variables to for ty3bar modules. Varies based on module.
+- **postfix** (string) - A string to be added to the end of the blocks output.
+- **prefix** (string) - A string to be added to the beginning of the blocks output.
+- **script** (path) - Used for legacy or persistent block types. The path to the script to run.
+- **separator** (bool) - Show the separator.
+- **separatorWidth** (number) - How wide the separator should be.
+- **signal** (SIGNAL) - If ty3bar receives the defined signal, the block with be triggered to run.
+
+The config has two sections, `defaults` and `blocks`. Defaults will be applied as the default properties for all blocks.
+Blocks is a list of the blocks, in order, that you want to be displayed. See the following example config.
+
+    defaults:
+      ignoreError: true
+      markup: pango
+      color: "#DDDDDD"
+    
+    blocks:
+    - type: module
+      module: cpu-usage
+      interval: 5
+      prefix: 'CPU: '
+      separator: false
+    
+    - type: module
+      module: loadavg
+      interval: 5
+      params:
+        o15: false
+    
+    - type: module
+      module: memory
+      interval: 30
+    
+    - type: module
+      module: datetime
+      color: "#FFFFFF"
+
+
+###  Block Types
+
+There are three different block types; legacy, persistent, and module. 
+
+**Legacy**
+
+Legacy blocks are blocks made for either i3status or i3blocks. These blocks behave in exactly the same way as blocks
+defined for i3blocks. Below is an example block using the legacy type.
+
+    - type: legacy
+      script: "/usr/lib/i3blocks/iface"
+      instance: "enp2s0"
+      interval: 60
+      prefix: "LAN: "
+      
+      
+**Persistent**
+
+Persistent blocks are very similar to legacy blocks, except the script that is run is intended to remain running.
+Everytime the script outputs to STDOUT, that output is used as the text for the block. A potential use case would be to
+collect information from a logfile. See the example below.
+
+    - type: persistent
+      script: "tail -f /path/to/log"
+      prefix: "Last Log Line: "
+      
+      
+**Module**
+
+Module blocks are blocks which are written in javascript. There are a number of modules built in. See
+[ty3bar Modules](#ty3bar-modules) for more information on how to use and write ty3bar modules.
+
+
+## ty3bar Modules
+
+### Built In Modules
+
+ty3bar ships with a variety of simple blocks. They are designed to be simple, and not require any external dependencies.
+To use a built in module, specify the module name as the `module` property of a block.
+
+**cpu-usage**
+
+Displays processor usage as a percentage. The percentage is a reflection of processor time used since the last interval.
+If your have the interval set for 5 seconds, you will always get the percentage of the previous 5 seconds.
+
+    - type: module
+      module: cpu-usage
+      interval: 5
+
+**datetime**
+
+Displays the current date and time. The format is displayed using the formatting options defined in
+[node-dateformat](https://github.com/felixge/node-dateformat#mask-options)
+
+    - type: module
+      module: datetime
+      params:
+        format: "ddd mmm dd yyyy h:MM:ss TT"
+        
+**loadavg**
+
+Displays the 1, 5, and 15 minute load averages. You can define which averages to show, and the number of decimal places
+to show.
+
+    - type: module
+      module: loadavg
+      params:
+        o1: true
+        o5: true
+        o15: false
+        precision: 2
+        
+**memory**
+
+Displays the current memory usage of the system. On linux system, this number is calculated from /proc/meminfo. On every
+other system the number is calculated from Nodes OS memory functions.
+
+    - type: module
+      module: memory
+      
+**uptime**
+
+Displays the amount of time the system has been up. Output can either show seconds, or hide seconds.
+
+    - type: module
+      module: uptime
+      interval: 1
+      params:
+        showSeconds: true
+               
+### External Modules
+
+User contributed modules can typically be installed via npm and should be prefixed with ty3bar-module-. For example, to
+use the [ty3bar weather module](https://github.com/mrkmg/ty3bar-module-weather), perform the following steps.
+
+Install ty3bar-module-weather globally via npm.
+
+    $ npm install -g ty3bar-module-weather
+    
+Determine the path to your global modules.
+
+    $ npm root -g
+    /usr/lib/node_modules
+    
+Add the module to your config.
+
+    - type: module
+      module: "/usr/lib/node_modules/ty3bar-module-weather"
+      interval: 600
+      params:
+        lat: 00.000
+        long: -00.000
+        key: xxxxxxxxxxxxxxxxxxxxxxxxxxxx
+        
+        
+### Writing a module
+
+A module only has a few requirements. A working example is the
+[ty3bar weather module](https://github.com/mrkmg/ty3bar-module-weather).
+
+A ty3bar module must export a single function, which take 2 arguments.
+
+    module.exports = function (dataCallback, config) {}
+    
+- *dataCallback* - a function should be called everytime the block should be updated. The dataCallback function must be
+  called with the following properties.
+    - *full_text* (required) - a string that contains what should show in the block.
+    - *short_text* (optional) - a string that contains a shortened version of the full_text.
+    - *color* (optional) - the color the make the text in the block.
+- *config* - An object containing all the configuration options set for this block. 
+    
+The function must return an object with the following properties.
+
+- start() - Starts the module. Should start any intervals or timers.
+- stop() - Stops the module. Should stop any intervals or timers. It is okay to allow any currently running operations
+  finish.
+- tick() - Should run the module once. For example, this would be called if the user sent a signal to the ty3bar process
+  which triggered this module to refresh.
+- click(button) - Should handle a user click on the block. Is many cases, this should just refresh the widget, but can
+  also be used to open a webpage, open a folder, or launch a program. `button` will be one of the following numbers:
+    - 1 - Left Mouse Button
+    - 2 - Middle Mouse Button
+    - 3 - Right Mouse Button
+    - 4 - Scroll Forward
+    - 5 - Scroll Backward
+    
+Below is very simple datetime module.
+
+    // ty3bar-module-simple-datetime.js
+    module.exports = function (dataCallback, config) {
+        var timer;
+        var running;
+        
+        var output = function() {
+            dataCallback({
+                full_text: Date.now().toString()
+            });
+        };
+        
+        return {
+            start: function () {
+                if (running) return;
+                running = true;
+                if (config.interval > 0) {
+                    timer = setInterval(output, config.interval * 1000);
+                }
+                output();
+            },
+            stop: function () {
+                if (!running) return;
+                running = false;
+                clearInterval(timer);
+            },
+            tick: function () {
+                output();
+            },
+            clicked: function (button) {
+                output();
+            }
+        };
+    };
+
+Then in your ty3bar configuration, you would add the following to the blocks.
+
+    - type: module
+      module: "/path/to/ty3bar-module-simple-datetime.js"
+      interval: 1
+      
+It is best practice to assume your module will be have multiple instances. Because of this, you should take special care
+to make sure that all variables related to the specific instance are not global in the module.
+
+## Contributing
+
+ty3bar is developed using typescript. For all development tools are installed locally into the package. Everything
+needed to develop is defined as npm scripts.
+
+To build ty3bar, use `npm run build`.
+
+To build ty3bar on every change, use `npm run build-watch`. This will cause ty3bar to be rebuilt whenever a file is
+changed.
+
+To lint ty3bar to ensure a consistent code style, use `npm run lint`. Please run the linter, and fix any issues
+described in the output before making a pull request. Any pull request which has linter errors will be rejected.
+
+## License
+
+The MIT License (MIT) 
+
+Copyright (c) 2016 Kevin Gravier
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
+documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
+rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit
+persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the
+Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR
+OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

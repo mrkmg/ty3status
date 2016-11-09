@@ -1,0 +1,24 @@
+defaults:
+  ignoreError: true
+  markup: pango
+
+blocks:
+- type: module
+  module: cpu-usage
+  interval: 5
+  prefix: 'CPU: '
+  separator: false
+
+- type: module
+  module: loadavg
+  interval: 5
+  params:
+    o15: false
+
+- type: module
+  module: memory
+  interval: 30
+
+- type: module
+  module: datetime
+  color: "#FFFFFF"
