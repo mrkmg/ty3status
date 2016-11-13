@@ -29,7 +29,7 @@ class BatteryModule extends BaseModule {
 
         this.config.params = xtend({
             battery: "BAT0",
-            chargedText: "",
+            chargedText: "F",
             chargingText: "C",
             dischargingText: "D",
             fontAwesome: false,

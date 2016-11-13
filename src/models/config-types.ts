@@ -1,4 +1,5 @@
 export interface IBlocksConfig {
+    outputSpeedLimit: number;
     blocks: Array<IBlockConfig>;
     defaults?: IBlockConfig;
 }

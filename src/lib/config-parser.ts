@@ -63,12 +63,32 @@ export class ConfigParser {
             type: EBlockConfigType.legacy,
         };
 
-        for (let i =0; i < this.parsedConfig.blocks.length; i++) {
+        for (let i = 0; i < this.parsedConfig.blocks.length; i++) {
             this.parsedConfig.blocks[i] = xtend(reqDefaults, this.parsedConfig.defaults, this.parsedConfig.blocks[i]);
+        }
+
+        if (!this.parsedConfig.outputSpeedLimit) {
+            this.parsedConfig.outputSpeedLimit = 500;
         }
     }
 
     private validate() {
+        if (typeof this.parsedConfig.outputSpeedLimit !== "number") {
+            this.parseErrors.push({
+                error: "Must be a number",
+                param: "outputSpeedLimit",
+            });
+            return;
+        }
+
+        if (this.parsedConfig.outputSpeedLimit <= 0) {
+            this.parseErrors.push({
+                error: "Must be greater than 0",
+                param: "outputSpeedLimit",
+            });
+            return;
+        }
+
         if (!this.parsedConfig.blocks) {
             this.parseErrors.push({
                 error: "Required",

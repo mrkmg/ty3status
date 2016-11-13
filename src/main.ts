@@ -1,3 +1,4 @@
+import ActionLimiter from "./lib/action-limiter";
 import Block from "./lib/block";
 import {ICommandRunnerData} from "./lib/command-runners/command-runner";
 import configParser from "./lib/config-parser";
@@ -15,6 +16,7 @@ let args: ITy3CLIArguments;
 let configPath: string;
 let config: IBlocksConfig;
 let runningBlocks: Array<IRunningBlock> = [];
+let outputLimiter: ActionLimiter;
 
 try {
     main();
@@ -25,12 +27,17 @@ try {
 function main() {
     args = parseArgs();
     makeConfig();
+    setupOutputLimiter();
     buildBlocks();
     if (!args.simple) {
         writeHeader();
     }
     startBlocks();
     bindStdin();
+}
+
+function setupOutputLimiter() {
+    outputLimiter = new ActionLimiter(writeOutput, config.outputSpeedLimit);
 }
 
 function bindStdin() {
@@ -73,7 +80,7 @@ function buildBlock(blockConfig: IBlockConfig, name: string) {
 
     block.on("data", (data: ICommandRunnerData) => {
         runningBlock.outputCurrent = xtend(runningBlock.outputCurrent, data);
-        writeOutput();
+        runOutput();
     });
     block.on("error", onError);
 
@@ -101,6 +108,10 @@ function writeHeader() {
     process.stdout.write(EOL);
     process.stdout.write("[");
     process.stdout.write(EOL);
+}
+
+function runOutput() {
+    outputLimiter.run();
 }
 
 function writeOutput() {

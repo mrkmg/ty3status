@@ -81,10 +81,19 @@ A block has the following properties:
 - **separatorWidth** (number) - How wide the separator should be.
 - **signal** (SIGNAL) - If ty3bar receives the defined signal, the block with be triggered to run.
 
-The config has two sections, `defaults` and `blocks`. Defaults will be applied as the default properties for all blocks.
-Blocks is a list of the blocks, in order, that you want to be displayed. See the following example config.
+The config has two sections, `defaults` and `blocks`, as well a global configuration options. Defaults will be applied
+as the default properties for all blocks. Blocks is a list of the blocks, in order, that you want to be displayed. 
+
+The global options are:
+
+- **outputSpeedLimit** *500* (milliseconds) - The minimum amount of time to wait between refreshing the bar. Useful to
+  prevent many blocks from updating the bar and causing cpu usage spikes in i3bar.
+
+An example config file:
 
 ```yaml
+outputSpeedLimit: 500
+
 defaults:
   ignoreError: true
   markup: pango
@@ -262,7 +271,7 @@ Add the module to your config.
 
 A module only has a few requirements.
 
-A ty3bar module must export a single function, which take 2 arguments.
+A ty3bar module must export a single function, which takes 2 arguments.
 
     module.exports = function (dataCallback, config) {}
     
