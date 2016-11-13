@@ -126,7 +126,7 @@ class BatteryModule extends BaseModule {
 
         let rawOutput: string = "";
 
-        let upowerProcess = spawn("upower", [
+        let upowerProcess: ChildProcess = spawn("upower", [
             "-i",
             `/org/freedesktop/UPower/devices/battery_${this.config.params.battery}`,
         ]);
