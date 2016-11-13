@@ -112,6 +112,9 @@ class BatteryModule extends BaseModule {
             this.upowerMonitorTimeout = setTimeout(() => this.onTick(), 100);
         });
 
+        this.upowerMonitorProcess.on("error", () => {
+            // TODO Need to implement a way for modules to log non fatal errors
+        });
     }
 
     private runUPower(): void {
@@ -132,9 +135,17 @@ class BatteryModule extends BaseModule {
             rawOutput += data.toString();
         });
 
-        upowerProcess.on("close", () => {
-            this.output(this.parseUPowerOutput(rawOutput));
-            this.upowerDataGetRunning = false;
+        upowerProcess.on("exit", (exitCode: number) => {
+            if (exitCode === 0) {
+                this.output(this.parseUPowerOutput(rawOutput));
+                this.upowerDataGetRunning = false;
+            }
+        });
+
+        upowerProcess.on("error", (error: Error) => {
+            this.dataCallback({
+                full_text: error.message,
+            });
         });
     }
 
@@ -165,10 +176,18 @@ class BatteryModule extends BaseModule {
 
             // tslint:disable-next-line:switch-default
             switch (option) {
-                case "state": state = value; break;
-                case "percentage": percentage = parseInt(value, 10); break;
-                case "time to full": timeCharging = value; break;
-                case "time to empty": timeDischarging = value; break;
+                case "state":
+                    state = value;
+                    break;
+                case "percentage":
+                    percentage = parseInt(value, 10);
+                    break;
+                case "time to full":
+                    timeCharging = value;
+                    break;
+                case "time to empty":
+                    timeDischarging = value;
+                    break;
             }
         }
 
@@ -181,7 +200,7 @@ class BatteryModule extends BaseModule {
     }
 }
 
-function percentageToColor (percentage: number): string {
+function percentageToColor(percentage: number): string {
     let blue: string;
     let green: string;
     let red: string;
