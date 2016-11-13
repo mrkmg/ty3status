@@ -1,0 +1,208 @@
+import BaseModule from "../lib/base-module";
+import {IBlockConfig} from "../models/config-types";
+import {IModuleDataFunction} from "../models/module-block";
+import {ChildProcess, spawn} from "child_process";
+import {clearTimeout, setTimeout} from "timers";
+import xtend = require("xtend");
+
+const icons = {
+    level_0: "<span font_desc=\"FontAwesome\">\uF244</span>",
+    level_100: "<span font_desc=\"FontAwesome\">\uF240</span>",
+    level_25: "<span font_desc=\"FontAwesome\">\uF243</span>",
+    level_50: "<span font_desc=\"FontAwesome\">\uF242</span>",
+    level_75: "<span font_desc=\"FontAwesome\">\uF241</span>",
+    plug: "<span font_desc=\"FontAwesome\">\uF1E6</span>",
+};
+
+export = (dataCallback: IModuleDataFunction, config: IBlockConfig) => {
+    return new BatteryModule(dataCallback, config);
+};
+
+class BatteryModule extends BaseModule {
+    private upowerDataGetRunning = false;
+    private upowerMonitorRunning = false;
+    private upowerMonitorProcess: ChildProcess;
+    private upowerMonitorTimeout: NodeJS.Timer;
+
+    constructor(dataCallback: IModuleDataFunction, config: IBlockConfig) {
+        super(dataCallback, config);
+
+        this.config.params = xtend({
+            battery: "BAT0",
+            chargedText: "",
+            chargingText: "C",
+            dischargingText: "D",
+            fontAwesome: false,
+        }, this.config.params);
+    }
+
+    public start() {
+        super.start();
+        this.startUpowerMonitor();
+    }
+
+    public stop() {
+        super.stop();
+
+        this.upowerMonitorProcess.kill();
+    }
+
+    protected onTick(): void {
+        this.runUPower();
+    }
+
+    private output(data: IUPower): void {
+        let fullText: string = `${this.getIcon(data.state, data.percentage)} ${data.percentage}%`;
+
+        if (data.state === "discharging") {
+            fullText += ` (${data.timeDischarging})`;
+        } else if (data.state === "charging") {
+            fullText += ` (${data.timeCharging})`;
+        }
+
+        this.dataCallback({
+            color: percentageToColor(data.percentage),
+            full_text: fullText,
+            short_text: data.percentage.toString(),
+        });
+    }
+
+    private getIcon(state: string, percentage: number): string {
+        if (this.config.params.fontAwesome) {
+            if (state === "charged") {
+                return icons.plug;
+            } else if (percentage > 90) {
+                return icons.level_100;
+            } else if (percentage > 75) {
+                return icons.level_75;
+            } else if (percentage > 50) {
+                return icons.level_50;
+            } else if (percentage > 25) {
+                return icons.level_25;
+            } else {
+                return icons.level_0;
+            }
+        } else {
+            switch (state) {
+                case "discharging":
+                    return this.config.params.dischargingText;
+                case "charging":
+                    return this.config.params.chargingText;
+                case "charged":
+                    return this.config.params.chargedText;
+                default:
+                    return "";
+            }
+        }
+    }
+
+    private startUpowerMonitor(): void {
+        if (this.upowerMonitorRunning) {
+            return;
+        }
+
+        this.upowerMonitorRunning = true;
+
+        this.upowerMonitorProcess = spawn("upower", [
+            "--monitor",
+        ]);
+
+        this.upowerMonitorProcess.stdout.on("data", () => {
+            clearTimeout(this.upowerMonitorTimeout);
+            this.upowerMonitorTimeout = setTimeout(() => this.onTick(), 100);
+        });
+
+    }
+
+    private runUPower(): void {
+        if (this.upowerDataGetRunning) {
+            return;
+        }
+
+        this.upowerDataGetRunning = true;
+
+        let rawOutput: string = "";
+
+        let upowerProcess = spawn("upower", [
+            "-i",
+            `/org/freedesktop/UPower/devices/battery_${this.config.params.battery}`,
+        ]);
+
+        upowerProcess.stdout.on("data", (data: Buffer) => {
+            rawOutput += data.toString();
+        });
+
+        upowerProcess.on("close", () => {
+            this.output(this.parseUPowerOutput(rawOutput));
+            this.upowerDataGetRunning = false;
+        });
+    }
+
+    private parseUPowerOutput(rawOutput: string): IUPower {
+        let state: string = "";
+        let percentage: number = 0;
+        let timeCharging: string = "";
+        let timeDischarging: string = "";
+
+        let lines = rawOutput.split(/\n/g);
+
+        let outputLength = lines.length;
+        let line: string;
+        let matches: Array<string>;
+        let option: string;
+        let value: string;
+        for (let i = 0; i < outputLength; i++) {
+            line = lines[i];
+
+            matches = line.match(/^\s+([a-z\- ]+):\s+(.+)$/);
+
+            if (!matches || matches.length !== 3) {
+                continue;
+            }
+
+            option = matches[1];
+            value = matches[2];
+
+            // tslint:disable-next-line:switch-default
+            switch (option) {
+                case "state": state = value; break;
+                case "percentage": percentage = parseInt(value, 10); break;
+                case "time to full": timeCharging = value; break;
+                case "time to empty": timeDischarging = value; break;
+            }
+        }
+
+        return {
+            state,
+            percentage,
+            timeCharging,
+            timeDischarging,
+        };
+    }
+}
+
+function percentageToColor (percentage: number): string {
+    let blue: string;
+    let green: string;
+    let red: string;
+
+    if (percentage > 50) {
+        red = Math.round((100 - percentage) * 2.55 * 2).toString(16);
+        red = "00".substring(red.length) + red;
+        green = "FF";
+        blue = "00";
+    } else {
+        red = "FF";
+        green = Math.round(percentage * 2.55 * 2).toString(16);
+        green = "00".substring(green.length) + green;
+        blue = "00";
+    }
+    return "#" + red + green + blue;
+}
+
+interface IUPower {
+    state: string;
+    percentage: number;
+    timeCharging: string;
+    timeDischarging: string;
+}
