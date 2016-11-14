@@ -6,7 +6,7 @@ module.exports = {
     entry: './src/main.ts',
     target: 'node',
     output: {
-        filename: './build/ty3bar.js'
+        filename: './build/ty3status.js'
     },
     resolve: {
         extensions: ['', '.webpack.js', '.ts', '.js']

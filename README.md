@@ -1,16 +1,16 @@
-ty3bar
+ty3status
 ======
 
-ty3bar is a replacement for i3status, py3status, or i3blocks. ty3bar is written in typescript with first class support
+ty3status is a replacement for i3status, py3status, or i3blocks. ty3status is written in typescript with first class support
 for javascript blocks, but allows for blocks to be written in any language.
 
 [TOC]: # 
 # Table of Contents
 - [Usage](#usage)
     - [i3 Config](#i3-config)
-    - [ty3bar Config](#ty3bar-config)
+    - [ty3status Config](#ty3status-config)
     - [Block Types](#block-types)
-- [ty3bar Modules](#ty3bar-modules)
+- [ty3status Modules](#ty3status-modules)
     - [Built In Modules](#built-in-modules)
     - [External Modules](#external-modules)
     - [Writing a module](#writing-a-module)
@@ -18,15 +18,15 @@ for javascript blocks, but allows for blocks to be written in any language.
 - [License](#license)
 
 
-In order to install ty3bar, you will need nodejs and npm.
+In order to install ty3status, you will need nodejs and npm.
 
 First, clone the repo.
 
-    git clone https://github.com/mrkmg/ty3bar.git /tmp/ty3bar
+    git clone https://github.com/mrkmg/ty3status.git /tmp/ty3status
     
 Navigate to the repo.
  
-    cd /tmp/ty3bar
+    cd /tmp/ty3status
     
 Install all dependencies.
 
@@ -46,17 +46,17 @@ Thats it!
 
 ### i3 Config
 
-You will need to update your i3 config to use ty3bar instead of i3status. You can do this by adding or changing the
-`status_command` to `ty3bar`. See the following example.
+You will need to update your i3 config to use ty3status instead of i3status. You can do this by adding or changing the
+`status_command` to `ty3status`. See the following example.
 
     bar {
-    	status_command ty3bar --config /path/to/config
+    	status_command ty3status --config /path/to/config
     	position top
     }
 
-### ty3bar Config
+### ty3status Config
 
-ty3bar uses yaml for its configuration file. A ty3bar configuration file defines default for all blocks and then a list
+ty3status uses yaml for its configuration file. A ty3status configuration file defines default for all blocks and then a list
 of blocks. A block is one item that is shown in your bar.
 
 
@@ -72,14 +72,14 @@ A block has the following properties:
 - **color** (hex color) - The default color of the block.
 - **instance** (string) - The "BLOCK_INSTANCE" environment variable for legacy blocks.
 - **interval** *30* (seconds) - How often the block should run. Set to -1 for a single run (do not run on an interval).
-- **module** (string) - Either a built-in module or the path to a ty3bar module. See [ty3bar-modules](#ty3bar-modules].
-- **params** (key: value object) - Variables to for ty3bar modules. Varies based on module.
+- **module** (string) - Either a built-in module or the path to a ty3status module. See [ty3status-modules](#ty3status-modules].
+- **params** (key: value object) - Variables to for ty3status modules. Varies based on module.
 - **postfix** (string) - A string to be added to the end of the blocks output.
 - **prefix** (string) - A string to be added to the beginning of the blocks output.
 - **script** (path) - Used for legacy or persistent block types. The path to the script to run.
 - **separator** *true* (bool) - Show the separator.
 - **separatorWidth** (number) - How wide the separator should be.
-- **signal** (SIGNAL) - If ty3bar receives the defined signal, the block with be triggered to run.
+- **signal** (SIGNAL) - If ty3status receives the defined signal, the block with be triggered to run.
 
 The config has two sections, `defaults` and `blocks`, as well a global configuration options. Defaults will be applied
 as the default properties for all blocks. Blocks is a list of the blocks, in order, that you want to be displayed. 
@@ -153,14 +153,14 @@ collect information from a logfile. See the example below.
 **Module**
 
 Module blocks are blocks which are written in javascript. There are a number of modules built in. See
-[ty3bar Modules](#ty3bar-modules) for more information on how to use and write ty3bar modules.
+[ty3status Modules](#ty3status-modules) for more information on how to use and write ty3status modules.
 
 
-## ty3bar Modules
+## ty3status Modules
 
 ### Built In Modules
 
-ty3bar ships with a variety of simple blocks. They are designed to be simple, and not require any external dependencies.
+ty3status ships with a variety of simple blocks. They are designed to be simple, and not require any external dependencies.
 To use a built in module, specify the module name as the `module` property of a block.
 
 **battery**
@@ -243,12 +243,12 @@ Displays the amount of time the system has been up. Output can either show secon
 
 ### External Modules
 
-User contributed modules can typically be installed via npm and should be prefixed with "ty3bar-module-". For example,
-to use the [ty3bar weather module](https://github.com/mrkmg/ty3bar-module-weather), perform the following steps.
+User contributed modules can typically be installed via npm and should be prefixed with "ty3status-module-". For example,
+to use the [ty3status weather module](https://github.com/mrkmg/ty3status-module-weather), perform the following steps.
 
-Install ty3bar-module-weather globally via npm.
+Install ty3status-module-weather globally via npm.
 
-    $ npm install -g ty3bar-module-weather
+    $ npm install -g ty3status-module-weather
     
 Determine the path to your global modules.
 
@@ -259,7 +259,7 @@ Add the module to your config.
 
 ```yaml
 - type: module
-  module: "/usr/lib/node_modules/ty3bar-module-weather"
+  module: "/usr/lib/node_modules/ty3status-module-weather"
   interval: 600
   params:
     lat: 00.000
@@ -271,7 +271,7 @@ Add the module to your config.
 
 A module only has a few requirements.
 
-A ty3bar module must export a single function, which takes 2 arguments.
+A ty3status module must export a single function, which takes 2 arguments.
 
     module.exports = function (dataCallback, config) {}
     
@@ -287,7 +287,7 @@ The function must return an object with the following properties.
 - *start()* - Starts the module. Should start any intervals or timers.
 - *stop()* - Stops the module. Should stop any intervals or timers. It is okay to allow any currently running operations
    finish.
-- *tick()* - Should run the module once. For example, this would be called if the user sent a signal to the ty3bar
+- *tick()* - Should run the module once. For example, this would be called if the user sent a signal to the ty3status
    process which triggered this module to refresh.
 - *click(button)* - Should handle a user click on the block. Is many cases, this should just refresh the widget, but can
    also be used to open a webpage, open a folder, or launch a program. `button` will be one of the following numbers:
@@ -300,7 +300,7 @@ The function must return an object with the following properties.
 Below is very simple datetime module.
 
 ```javascript
-// ty3bar-module-simple-datetime.js
+// ty3status-module-simple-datetime.js
 module.exports = function (dataCallback, config) {
     var timer;
     var running;
@@ -335,11 +335,11 @@ module.exports = function (dataCallback, config) {
 };
 ```
 
-Then in your ty3bar configuration, you would add the following to your blocks.
+Then in your ty3status configuration, you would add the following to your blocks.
 
 ```yaml
 - type: module
-  module: "/path/to/ty3bar-module-simple-datetime.js"
+  module: "/path/to/ty3status-module-simple-datetime.js"
   interval: 1
 ```
 
@@ -348,15 +348,15 @@ to make sure that all variables related to the specific instance are not global 
 
 ## Contributing
 
-ty3bar is developed using typescript. For all development tools are installed locally into the package. Everything
+ty3status is developed using typescript. For all development tools are installed locally into the package. Everything
 needed to develop is defined as npm scripts.
 
-To build ty3bar, use `npm run build`.
+To build ty3status, use `npm run build`.
 
-To build ty3bar on every change, use `npm run build-watch`. This will cause ty3bar to be rebuilt whenever a file is
+To build ty3status on every change, use `npm run build-watch`. This will cause ty3status to be rebuilt whenever a file is
 changed.
 
-To lint ty3bar to ensure a consistent code style, use `npm run lint`. Please run the linter, and fix any issues
+To lint ty3status to ensure a consistent code style, use `npm run lint`. Please run the linter, and fix any issues
 described in the output before making a pull request. Any pull request which has linter errors will be rejected.
 
 ## License

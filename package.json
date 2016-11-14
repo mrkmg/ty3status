@@ -1,5 +1,5 @@
 {
-  "name": "ty3bar",
+  "name": "ty3status",
   "version": "0.3.0",
   "description": "A Typescript based i3 bar status program. Supports long running commands.",
   "main": "build/main.js",
@@ -8,10 +8,11 @@
   "scripts": {
     "clean": "rimraf build",
     "lint": "tslint --force --format verbose \"src/**/*.ts\" \"test/**/*.ts\" ",
-    "bin": "echo '#!/usr/bin/env node' > ./ty3bar && cat ./build/ty3bar.js >> ty3bar && chmod +x ./ty3bar",
+    "bin": "echo '#!/usr/bin/env node' > ./ty3status && cat ./build/ty3status.js >> ty3status && chmod +x ./ty3status",
     "build": "webpack",
     "build-watch": "webpack --watch",
-    "install": "cp ./ty3bar /usr/bin/ty3bar && cp ./ty3bar.yaml /etc/ty3bar.yaml"
+    "install": "cp ./ty3status /usr/bin/ty3status && cp ./ty3status.yaml /etc/ty3status.yaml",
+    "npm run uninstall": "rm /usr/bin/ty3status && rm /etc/ty3status.yaml"
   },
   "dependencies": {
     "@types/js-yaml": "^3.5.28",

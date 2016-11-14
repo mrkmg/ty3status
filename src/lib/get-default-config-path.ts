@@ -3,9 +3,9 @@ import {existsSync} from "fs";
 import {EOL, homedir} from "os";
 
 let checkPoints = [
-    `${homedir()}/.config/ty3bar.yaml`,
-    `${homedir()}/.config/i3/ty3bar.yaml`,
-    "/etc/ty3bar.yaml",
+    `${homedir()}/.config/ty3status.yaml`,
+    `${homedir()}/.config/i3/ty3status.yaml`,
+    "/etc/ty3status.yaml",
 ];
 
 export default function getDefaultConfigPath(): string {
