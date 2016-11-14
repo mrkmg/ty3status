@@ -1,11 +1,12 @@
 ty3status
 ======
 
-ty3status is a replacement for i3status, py3status, or i3blocks. ty3status is written in typescript with first class support
-for javascript blocks, but allows for blocks to be written in any language.
+ty3status is a replacement for i3status, py3status, or i3blocks. ty3status is written in typescript with first class
+support for javascript blocks, but allows for blocks to be written in any language. 
 
 [TOC]: # 
 # Table of Contents
+- [Installation](#installation)
 - [Usage](#usage)
     - [i3 Config](#i3-config)
     - [ty3status Config](#ty3status-config)
@@ -17,6 +18,7 @@ for javascript blocks, but allows for blocks to be written in any language.
 - [Contributing](#contributing)
 - [License](#license)
 
+## Installation
 
 In order to install ty3status, you will need nodejs and npm.
 
@@ -40,7 +42,7 @@ Finally, install the executable into your path.
 
     sudo npm run install
 
-Thats it!
+That's it!
 
 ## Usage
 
