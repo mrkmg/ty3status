@@ -1,6 +1,6 @@
 {
   "name": "ty3status",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "description": "A Typescript based i3 bar status program. Supports long running commands.",
   "main": "build/main.js",
   "author": "Kevin Gravier <kevin@mrkmg.com>",
