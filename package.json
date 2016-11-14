@@ -12,7 +12,7 @@
     "build": "webpack",
     "build-watch": "webpack --watch",
     "install": "cp ./ty3status /usr/bin/ty3status && cp ./ty3status.yaml /etc/ty3status.yaml",
-    "npm run uninstall": "rm /usr/bin/ty3status && rm /etc/ty3status.yaml"
+    "uninstall": "rm /usr/bin/ty3status && rm /etc/ty3status.yaml"
   },
   "dependencies": {
     "@types/js-yaml": "^3.5.28",
