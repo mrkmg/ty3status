@@ -70,6 +70,19 @@ function buildBlock(blockConfig: IBlockConfig, name: string) {
         separator: defaultValue(blockConfig.separator, false),
         separator_width: defaultValue(blockConfig.separatorWidth, 10),
     };
+
+    if (blockConfig.border) {
+        initialOutput.border = blockConfig.border;
+        initialOutput.border_bottom = defaultValue(blockConfig.border_bottom, 0);
+        initialOutput.border_left = defaultValue(blockConfig.border_left, 0);
+        initialOutput.border_right = defaultValue(blockConfig.border_right, 0);
+        initialOutput.border_top = defaultValue(blockConfig.border_top, 0);
+    }
+
+    if (blockConfig.background) {
+        initialOutput.background = blockConfig.background;
+    }
+
     let runningBlock = {
         block,
         outputCurrent: xtend(initialOutput),

@@ -11,6 +11,12 @@ export interface IBlockConfig {
     retryDelay: number;
     type: EBlockConfigType;
 
+    background?: string;
+    border?: string;
+    border_bottom?: number;
+    border_left?: number;
+    border_right?: number;
+    border_top?: number;
     color?: string;
     instance?: string;
     interval?: number;
@@ -33,6 +39,12 @@ export enum EBlockConfigType {
 export interface IBlockOutput {
     full_text: string;
 
+    background?: string;
+    border?: string;
+    border_bottom?: number;
+    border_left?: number;
+    border_right?: number;
+    border_top?: number;
     color?: string;
     markup?: string;
     name?: string;

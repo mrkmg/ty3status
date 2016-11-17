@@ -82,6 +82,12 @@ A block has the following properties:
 - **separator** *true* (bool) - Show the separator.
 - **separatorWidth** (number) - How wide the separator should be.
 - **signal** (SIGNAL) - If ty3status receives the defined signal, the block with be triggered to run.
+- **background** {hex_color) - *i3-gaps only* - Set the background color.
+- **border** (hex_color) - *i3-gaps only* - Set the border color.
+- **border_bottom** (number) - *i3-gaps only* - Set size of the bottom border.
+- **border_left** (number) - *i3-gaps only* - Set size of the left border.
+- **border_right** (number) - *i3-gaps only* - Set size of the right border.
+- **border_top** (number) - *i3-gaps only* - Set size of the top border.
 
 The config has two sections, `defaults` and `blocks`, as well a global configuration options. Defaults will be applied
 as the default properties for all blocks. Blocks is a list of the blocks, in order, that you want to be displayed. 

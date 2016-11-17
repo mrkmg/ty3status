@@ -260,6 +260,104 @@ export class ConfigParser {
                             continue;
                         }
                         break;
+                    case "background":
+                        if (typeof block.background !== "string") {
+                            this.parseErrors.push({
+                                error: `Not a string: ${block.background}`,
+                                param: `${path}.background`,
+                            });
+                            continue;
+                        }
+                        if (!isValidColor(block.background)) {
+                            this.parseErrors.push({
+                                error: `Not a valid color: ${block.background}`,
+                                param: `${path}.background`,
+                            });
+                        }
+                        break;
+                    case "border":
+                        if (typeof block.border !== "string") {
+                            this.parseErrors.push({
+                                error: `Not a string: ${block.border}`,
+                                param: `${path}.border`,
+                            });
+                            continue;
+                        }
+                        if (!isValidColor(block.border)) {
+                            this.parseErrors.push({
+                                error: `Not a valid color: ${block.border}`,
+                                param: `${path}.border`,
+                            });
+                        }
+                        break;
+                    case "border_bottom":
+                        if (typeof block.border_bottom !== "number") {
+                            this.parseErrors.push({
+                                error: `Not a number: ${block.border_bottom}`,
+                                param: `${path}.border_bottom`,
+                            });
+                            continue;
+                        }
+                        if (block.border_bottom <= 0) {
+                            this.parseErrors.push({
+                                error: `Must be greater or equal to 0`,
+                                param: `${path}.border_bottom`,
+                            });
+                            continue;
+
+                        }
+                        break;
+                    case "border_left":
+                        if (typeof block.border_left !== "number") {
+                            this.parseErrors.push({
+                                error: `Not a number: ${block.border_left}`,
+                                param: `${path}.border_left`,
+                            });
+                            continue;
+                        }
+                        if (block.border_left <= 0) {
+                            this.parseErrors.push({
+                                error: `Must be greater or equal to 0`,
+                                param: `${path}.border_left`,
+                            });
+                            continue;
+
+                        }
+                        break;
+                    case "border_right":
+                        if (typeof block.border_right !== "number") {
+                            this.parseErrors.push({
+                                error: `Not a number: ${block.border_right}`,
+                                param: `${path}.border_right`,
+                            });
+                            continue;
+                        }
+                        if (block.border_right <= 0) {
+                            this.parseErrors.push({
+                                error: `Must be greater or equal to 0`,
+                                param: `${path}.border_right`,
+                            });
+                            continue;
+
+                        }
+                        break;
+                    case "border_top":
+                        if (typeof block.border_top !== "number") {
+                            this.parseErrors.push({
+                                error: `Not a number: ${block.border_top}`,
+                                param: `${path}.border_top`,
+                            });
+                            continue;
+                        }
+                        if (block.border_top <= 0) {
+                            this.parseErrors.push({
+                                error: `Must be greater or equal to 0`,
+                                param: `${path}.border_top`,
+                            });
+                            continue;
+
+                        }
+                        break;
                     default:
                         this.parseErrors.push({
                             error: `Unknown key: ${prop}`,
