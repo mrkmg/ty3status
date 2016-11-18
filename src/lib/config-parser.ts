@@ -358,6 +358,51 @@ export class ConfigParser {
 
                         }
                         break;
+                    case "align":
+                        if (typeof block.align !== "string") {
+                            this.parseErrors.push({
+                                error: `Not a string: ${block.align}`,
+                                param: `${path}.align`,
+                            });
+                            continue;
+                        }
+                        if (!(block.align in ["left", "top", "right"])) {
+                            this.parseErrors.push({
+                                error: `Not a string: ${block.align}`,
+                                param: `${path}.align`,
+                            });
+                            continue;
+                        }
+                        break;
+                    case "minWidth":
+                        if (!(typeof block.minWidth in ["string", "number"])) {
+                            this.parseErrors.push({
+                                error: `Not a string or number: ${block.minWidth}`,
+                                param: `${path}.minWidth`,
+                            });
+                            continue;
+                        }
+                        // tslint:disable-next-line:switch-default
+                        switch (typeof block.minWidth) {
+                            case "number":
+                                if (block.minWidth < 0) {
+                                    this.parseErrors.push({
+                                        error: `Must be greater or equal to 0: ${block.minWidth}`,
+                                        param: `${path}.minWidth`,
+                                    });
+                                    continue;
+                                }
+                                break;
+                            case "string":
+                                if (block.minWidth.length) {
+                                    this.parseErrors.push({
+                                        error: `Empty string not allowed: ${block.minWidth}`,
+                                        param: `${path}.minWidth`,
+                                    });
+                                    continue;
+                                }
+                        }
+                        break;
                     default:
                         this.parseErrors.push({
                             error: `Unknown key: ${prop}`,

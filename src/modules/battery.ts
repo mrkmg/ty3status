@@ -1,5 +1,5 @@
 import BaseModule from "../lib/base-module";
-import {IBlockConfig} from "../models/config-types";
+import {IBlockConfig, IBlockOutput} from "../models/config-types";
 import {IModuleDataFunction} from "../models/module-block";
 import {ChildProcess, spawn} from "child_process";
 import {clearTimeout, setTimeout} from "timers";
@@ -33,6 +33,7 @@ class BatteryModule extends BaseModule {
             chargingText: "C",
             dischargingText: "D",
             fontAwesome: false,
+            urgentLevel: 10,
         }, this.config.params);
     }
 
@@ -60,16 +61,22 @@ class BatteryModule extends BaseModule {
             fullText += ` (${data.timeCharging})`;
         }
 
-        this.dataCallback({
+        let outputData: IBlockOutput = {
             color: percentageToColor(data.percentage),
             full_text: fullText,
             short_text: data.percentage.toString(),
-        });
+        };
+
+        if (data.percentage <= this.config.params.urgentLevel) {
+            outputData.urgent = true;
+        }
+
+        this.dataCallback(outputData);
     }
 
     private getIcon(state: string, percentage: number): string {
         if (this.config.params.fontAwesome) {
-            if (state === "charged") {
+            if (state === "fully-charged") {
                 return icons.plug;
             } else if (percentage > 90) {
                 return icons.level_100;
@@ -88,7 +95,7 @@ class BatteryModule extends BaseModule {
                     return this.config.params.dischargingText;
                 case "charging":
                     return this.config.params.chargingText;
-                case "charged":
+                case "fully-charged":
                     return this.config.params.chargedText;
                 default:
                     return "";

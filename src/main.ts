@@ -83,6 +83,14 @@ function buildBlock(blockConfig: IBlockConfig, name: string) {
         initialOutput.background = blockConfig.background;
     }
 
+    if (blockConfig.align) {
+        initialOutput.align = blockConfig.align;
+    }
+
+    if (blockConfig.minWidth) {
+        initialOutput.min_width = blockConfig.minWidth;
+    }
+
     let runningBlock = {
         block,
         outputCurrent: xtend(initialOutput),

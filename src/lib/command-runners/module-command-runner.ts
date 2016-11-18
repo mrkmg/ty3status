@@ -138,6 +138,20 @@ export default class ModuleCommandRunner extends EventEmitter implements IComman
             return false;
         }
 
+        if (
+            "align" in data &&
+            typeof data.align !== "string" &&
+            !(<string> data.align in ["left", "center", "right"])
+        ) {
+            this.emit("error", new CommandRunnerDataError("align"));
+            return false;
+        }
+
+        if ("urgent" in data && typeof data.urgent !== "boolean") {
+            this.emit("error", new CommandRunnerDataError("urgent"));
+            return false;
+        }
+
         return true;
     }
 

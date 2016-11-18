@@ -11,6 +11,7 @@ export interface IBlockConfig {
     retryDelay: number;
     type: EBlockConfigType;
 
+    align?: string;
     background?: string;
     border?: string;
     borderBottom?: number;
@@ -20,6 +21,7 @@ export interface IBlockConfig {
     color?: string;
     instance?: string;
     interval?: number;
+    minWidth?: number & string;
     module?: string;
     params?: any;
     postfix?: string;
@@ -39,6 +41,7 @@ export enum EBlockConfigType {
 export interface IBlockOutput {
     full_text: string;
 
+    align?: string;
     background?: string;
     border?: string;
     border_bottom?: number;
@@ -47,8 +50,10 @@ export interface IBlockOutput {
     border_top?: number;
     color?: string;
     markup?: string;
+    min_width?: number | string;
     name?: string;
     separator?: boolean;
     separator_block_width?: number;
     short_text?: string;
+    urgent?: boolean;
 }

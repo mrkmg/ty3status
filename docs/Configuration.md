@@ -21,28 +21,30 @@ of blocks. A block is one item that is shown in your bar.
 
 A block has the following properties:
 
-- **ignoreError** *true* (bool) - If this block errors, should we display the error or not.
-- **markup** *null* ("pango" or null) - If you want to use the pango markup.
-- **maxRetries** *20* (number) - If the block errors, how many retries before giving up.
-- **retryDelay** *1000* (milliseconds) - How long to wait between retries if there is an error.
-- **type** ("legacy", "persistent", "module") - The type of block. See [Block Types](#block-types).
+- **align** *left* ("left", "top", "right") - Align the text.
+- **background** (hex_color) - Set the background color.
+- **border** (hex_color) - Set the border color.
+- **borderBottom** (number) - Set size of the bottom border.
+- **borderLeft** (number) - Set size of the left border.
+- **borderRight** (number) - Set size of the right border.
+- **borderTop** (number) - Set size of the top border.
 - **color** (hex color) - The default color of the block.
+- **ignoreError** *true* (bool) - If this block errors, should we display the error or not.
 - **instance** (string) - The "BLOCK_INSTANCE" environment variable for legacy blocks.
 - **interval** *30* (seconds) - How often the block should run. Set to -1 for a single run (do not run on an interval).
+- **markup** *null* ("pango" or null) - If you want to use the pango markup.
+- **maxRetries** *20* (number) - If the block errors, how many retries before giving up.
+- **minWidth** (string or number) - Minimum width of the block. If a number is specified, that number of pixels will be used. If a string is specified, use that string as a template for the minimum width.
 - **module** (string) - Either a built-in module or the path to a ty3status module. See [ty3status-modules](#ty3status-modules].
 - **params** (key: value object) - Variables to for ty3status modules. Varies based on module.
 - **postfix** (string) - A string to be added to the end of the blocks output.
 - **prefix** (string) - A string to be added to the beginning of the blocks output.
+- **retryDelay** *1000* (milliseconds) - How long to wait between retries if there is an error.
 - **script** (path) - Used for legacy or persistent block types. The path to the script to run.
 - **separator** *true* (bool) - Show the separator.
 - **separatorWidth** (number) - How wide the separator should be.
 - **signal** (SIGNAL) - If ty3status receives the defined signal, the block with be triggered to run.
-- **background** (hex_color) - Set the background color.
-- **border** (hex_color) - *i3-gaps only* - Set the border color.
-- **borderBottom** (number) - *i3-gaps only* - Set size of the bottom border.
-- **borderLeft** (number) - *i3-gaps only* - Set size of the left border.
-- **borderRight** (number) - *i3-gaps only* - Set size of the right border.
-- **borderTop** (number) - *i3-gaps only* - Set size of the top border.
+- **type** ("legacy", "persistent", "module") - The type of block. See [Block Types](#block-types).
 
 The config has two sections, `defaults` and `blocks`, as well a global configuration options. Defaults will be applied
 as the default properties for all blocks. Blocks is a list of the blocks, in order, that you want to be displayed. 

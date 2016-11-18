@@ -20,6 +20,15 @@ charge or time left until full discharge. Uses UPower to retrieve the data and m
 unplugging). It also supports [FontAwesome](http://fontawesome.io/). If you have FontAwesome installed on your machine,
 you can use beautiful icons to represent the battery level. Make sure to set markup to pango if using FontAwesome.
 
+Params:
+
+- chargingIcon - Text to use when charging.
+- dischargingIcon - Text to use when discharging.
+- chargedIcon - Text to use when fully charged.
+- fontAwesome - Use font awesome icons instead of the above options.
+- urgentLevel - Percentage of battery left to make the block show urgency.
+
+
 ```yaml
 - type: module
   module: battery
@@ -29,6 +38,7 @@ you can use beautiful icons to represent the battery level. Make sure to set mar
     dischargingIcon: D
     chargedIcon: G
     fontAwesome: false
+    urgentLevel: 10
 ```
 
 ### cpu-usage
