@@ -13,10 +13,10 @@ export interface IBlockConfig {
 
     background?: string;
     border?: string;
-    border_bottom?: number;
-    border_left?: number;
-    border_right?: number;
-    border_top?: number;
+    borderBottom?: number;
+    borderLeft?: number;
+    borderRight?: number;
+    borderTop?: number;
     color?: string;
     instance?: string;
     interval?: number;
@@ -49,6 +49,6 @@ export interface IBlockOutput {
     markup?: string;
     name?: string;
     separator?: boolean;
-    separator_width?: number;
+    separator_block_width?: number;
     short_text?: string;
 }

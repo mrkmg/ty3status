@@ -68,15 +68,15 @@ function buildBlock(blockConfig: IBlockConfig, name: string) {
         markup: blockConfig.markup,
         name,
         separator: defaultValue(blockConfig.separator, false),
-        separator_width: defaultValue(blockConfig.separatorWidth, 10),
+        separator_block_width: defaultValue(blockConfig.separatorWidth, 10),
     };
 
     if (blockConfig.border) {
         initialOutput.border = blockConfig.border;
-        initialOutput.border_bottom = defaultValue(blockConfig.border_bottom, 0);
-        initialOutput.border_left = defaultValue(blockConfig.border_left, 0);
-        initialOutput.border_right = defaultValue(blockConfig.border_right, 0);
-        initialOutput.border_top = defaultValue(blockConfig.border_top, 0);
+        initialOutput.border_bottom = defaultValue(blockConfig.borderBottom, 0);
+        initialOutput.border_left = defaultValue(blockConfig.borderLeft, 0);
+        initialOutput.border_right = defaultValue(blockConfig.borderRight, 0);
+        initialOutput.border_top = defaultValue(blockConfig.borderTop, 0);
     }
 
     if (blockConfig.background) {

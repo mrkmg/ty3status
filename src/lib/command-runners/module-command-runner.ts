@@ -128,8 +128,8 @@ export default class ModuleCommandRunner extends EventEmitter implements IComman
             return false;
         }
 
-        if ("separator_width" in data && typeof data.separator_width !== "number") {
-            this.emit("error", new CommandRunnerDataError("separator_width"));
+        if ("separator_block_width" in data && typeof data.separator_block_width !== "number") {
+            this.emit("error", new CommandRunnerDataError("separator_block_width"));
             return false;
         }
 

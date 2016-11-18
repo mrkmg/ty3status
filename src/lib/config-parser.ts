@@ -290,69 +290,69 @@ export class ConfigParser {
                             });
                         }
                         break;
-                    case "border_bottom":
-                        if (typeof block.border_bottom !== "number") {
+                    case "borderBottom":
+                        if (typeof block.borderBottom !== "number") {
                             this.parseErrors.push({
-                                error: `Not a number: ${block.border_bottom}`,
-                                param: `${path}.border_bottom`,
+                                error: `Not a number: ${block.borderBottom}`,
+                                param: `${path}.borderBottom`,
                             });
                             continue;
                         }
-                        if (block.border_bottom <= 0) {
+                        if (block.borderBottom < 0) {
                             this.parseErrors.push({
                                 error: `Must be greater or equal to 0`,
-                                param: `${path}.border_bottom`,
+                                param: `${path}.borderBottom`,
                             });
                             continue;
 
                         }
                         break;
-                    case "border_left":
-                        if (typeof block.border_left !== "number") {
+                    case "borderLeft":
+                        if (typeof block.borderLeft !== "number") {
                             this.parseErrors.push({
-                                error: `Not a number: ${block.border_left}`,
-                                param: `${path}.border_left`,
+                                error: `Not a number: ${block.borderLeft}`,
+                                param: `${path}.borderLeft`,
                             });
                             continue;
                         }
-                        if (block.border_left <= 0) {
+                        if (block.borderLeft < 0) {
                             this.parseErrors.push({
                                 error: `Must be greater or equal to 0`,
-                                param: `${path}.border_left`,
+                                param: `${path}.borderLeft`,
                             });
                             continue;
 
                         }
                         break;
-                    case "border_right":
-                        if (typeof block.border_right !== "number") {
+                    case "borderRight":
+                        if (typeof block.borderRight !== "number") {
                             this.parseErrors.push({
-                                error: `Not a number: ${block.border_right}`,
-                                param: `${path}.border_right`,
+                                error: `Not a number: ${block.borderRight}`,
+                                param: `${path}.borderRight`,
                             });
                             continue;
                         }
-                        if (block.border_right <= 0) {
+                        if (block.borderRight < 0) {
                             this.parseErrors.push({
                                 error: `Must be greater or equal to 0`,
-                                param: `${path}.border_right`,
+                                param: `${path}.borderRight`,
                             });
                             continue;
 
                         }
                         break;
-                    case "border_top":
-                        if (typeof block.border_top !== "number") {
+                    case "borderTop":
+                        if (typeof block.borderTop !== "number") {
                             this.parseErrors.push({
-                                error: `Not a number: ${block.border_top}`,
-                                param: `${path}.border_top`,
+                                error: `Not a number: ${block.borderTop}`,
+                                param: `${path}.borderTop`,
                             });
                             continue;
                         }
-                        if (block.border_top <= 0) {
+                        if (block.borderTop < 0) {
                             this.parseErrors.push({
                                 error: `Must be greater or equal to 0`,
-                                param: `${path}.border_top`,
+                                param: `${path}.borderTop`,
                             });
                             continue;
 
