@@ -4,6 +4,7 @@
   "description": "A Typescript based i3 bar status program. Supports long running commands.",
   "main": "build/main.js",
   "author": "Kevin Gravier <kevin@mrkmg.com>",
+  "repo": "git+https://github.com/mrkmg/ty3status.git",
   "license": "MIT",
   "scripts": {
     "clean": "rimraf build",
@@ -11,7 +12,7 @@
     "bin": "echo '#!/usr/bin/env node' > ./ty3status && cat ./build/ty3status.js >> ty3status && chmod +x ./ty3status",
     "build": "webpack",
     "build-watch": "webpack --watch",
-    "install": "cp ./ty3status /usr/bin/ty3status && cp ./ty3status.yaml /etc/ty3status.yaml",
+    "system-install": "cp ./ty3status /usr/bin/ty3status && cp ./ty3status.yaml /etc/ty3status.yaml",
     "uninstall": "rm /usr/bin/ty3status && rm /etc/ty3status.yaml"
   },
   "dependencies": {

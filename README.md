@@ -25,7 +25,7 @@ Install ty3status.
     git checkout $(git describe --long --tags) && \
     (yarn || npm install) && \
     npm run build && \
-    sudo npm run install
+    sudo npm run system-install
 
 Change your status line program in your i3 config to ty3status.
 

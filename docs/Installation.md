@@ -25,7 +25,7 @@ Next, you will need to build the executable.
     
 Finally, install the executable into your path.
 
-    sudo npm run install
+    sudo npm run system-install
 
 That's it!
 
