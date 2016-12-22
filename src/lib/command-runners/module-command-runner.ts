@@ -59,11 +59,12 @@ export default class ModuleCommandRunner extends EventEmitter implements IComman
             } else {
                 // Dirty hack to work around webpack
                 // tslint:disable-next-line:no-eval
-                mod = eval("require('" + this.module + "')");
+                mod = eval("require")(this.module);
             }
-            this.instance = mod((data: IBlockOutput) => this.onData(data), this.config);
+
+            this.instance = mod(this.onData.bind(this), this.config);
         } catch (err) {
-            this.emit("error", new CommandRunnerRunError(err.message));
+            this.emit("error", new CommandRunnerRunError(err.message, err.stack));
         }
     }
 

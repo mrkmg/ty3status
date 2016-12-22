@@ -1,11 +1,13 @@
-import ActionLimiter from "./lib/action-limiter";
 import Block from "./lib/block";
 import {ICommandRunnerData} from "./lib/command-runners/command-runner";
 import configParser from "./lib/config-parser";
 import getDefaultConfigPath from "./lib/get-default-config-path";
 import Logger from "./lib/logger";
+import I3BarOutputter from "./lib/outputters/i3-bar-outputter";
+import SimpleOutputter from "./lib/outputters/simple-outputter";
 import {ITy3CLIArguments, default as parseArgs} from "./lib/parse-args";
 import {IBlockConfig, IBlockOutput, IBlocksConfig} from "./models/config-types";
+import {IOutputter} from "./models/outputter";
 import {Ty3Error} from "./models/ty3error";
 import {EOL} from "os";
 import defaultValue = require("default-value");
@@ -16,7 +18,7 @@ let args: ITy3CLIArguments;
 let configPath: string;
 let config: IBlocksConfig;
 let runningBlocks: Array<IRunningBlock> = [];
-let outputLimiter: ActionLimiter;
+let outputter: IOutputter;
 
 try {
     main();
@@ -27,17 +29,13 @@ try {
 function main() {
     args = parseArgs();
     makeConfig();
-    setupOutputLimiter();
     buildBlocks();
-    if (!args.simple) {
-        writeHeader();
-    }
+    outputter = args.simple ?
+        new SimpleOutputter(config.outputSpeedLimit) :
+        new I3BarOutputter(config.outputSpeedLimit);
+    outputter.start();
     startBlocks();
     bindStdin();
-}
-
-function setupOutputLimiter() {
-    outputLimiter = new ActionLimiter(writeOutput, config.outputSpeedLimit);
 }
 
 function bindStdin() {
@@ -113,62 +111,16 @@ function buildBlock(blockConfig: IBlockConfig, name: string) {
 
 }
 
+function runOutput() {
+    outputter.setBlocks(runningBlocks.map((i) => i.outputCurrent));
+}
+
 function startBlocks() {
     for (let i = 0; i < runningBlocks.length; i++) {
         let block = runningBlocks[i].block;
 
         block.start();
     }
-}
-
-function writeHeader() {
-    process.stdout.write(JSON.stringify({
-        click_events: true,
-        version: 1,
-    }));
-    process.stdout.write(EOL);
-    process.stdout.write("[");
-    process.stdout.write(EOL);
-}
-
-function runOutput() {
-    outputLimiter.run();
-}
-
-function writeOutput() {
-    if (args.simple) {
-        writeOutputSimple();
-    } else {
-        writeOutputJson();
-    }
-}
-
-function writeOutputJson() {
-    process.stdout.write(
-        JSON.stringify(
-            runningBlocks.filter(showOutput).map((runningBlock) => runningBlock.outputCurrent)
-        )
-    );
-    process.stdout.write(",");
-    process.stdout.write(EOL);
-
-}
-
-function writeOutputSimple() {
-    for (let i = 0; i < runningBlocks.length; i++) {
-        let runningBlock = runningBlocks[i];
-        if (!showOutput(runningBlock)) {
-            continue;
-        }
-
-        process.stdout.write(runningBlock.outputCurrent.full_text);
-        if (runningBlock.outputCurrent.separator) {
-            process.stdout.write(" | ");
-        } else {
-            process.stdout.write(" ");
-        }
-    }
-    process.stdout.write(EOL);
 }
 
 let inputCache: Array<string> = [];
@@ -224,9 +176,6 @@ function onError(error: Error) {
     }
 }
 
-function showOutput(outBlock: IRunningBlock) {
-    return outBlock.outputCurrent.full_text.trim().length > 0;
-}
 
 interface II3Event {
     y: number;

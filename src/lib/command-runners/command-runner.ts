@@ -43,29 +43,29 @@ export interface ICommandRunnerData {
 }
 
 export class CommandRunnerError extends Exception {
-    constructor(message?: string) {
-        super(message);
+    constructor(message?: string, stack?: string) {
+        super(message, stack);
         this.name = "CommandRunnerError";
     }
 }
 
 export class CommandRunnerStopError extends CommandRunnerError {
-    constructor(message?: string) {
-        super(message);
+    constructor(message?: string, stack?: string) {
+        super(message, stack);
         this.name = "CommandRunnerStopError";
     }
 }
 
 export class CommandRunnerRunError extends CommandRunnerError {
-    constructor(message?: string) {
-        super(message);
+    constructor(message?: string, stack?: string) {
+        super(message, stack);
         this.name = "CommandRunnerRunError";
     }
 }
 
 export class CommandRunnerDataError extends CommandRunnerError {
-    constructor(message?: string) {
-        super(message);
+    constructor(message?: string, stack?: string) {
+        super(message, stack);
         this.name = "CommandRunnerDataError";
     }
 }

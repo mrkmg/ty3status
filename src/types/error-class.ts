@@ -1,9 +1,9 @@
 class Exception extends Error {
-    constructor(message?: string) {
+    constructor(message?: string, stack?: string) {
         super(message);
         this.message = message;
         this.name = "Exception";
-        this.stack = (<any> new Error()).stack;
+        this.stack = stack ? stack : (new Error()).stack;
     }
 }
 
