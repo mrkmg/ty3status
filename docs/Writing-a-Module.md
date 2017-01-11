@@ -7,12 +7,13 @@ A ty3status module must export a single function, which takes 2 arguments.
 
     module.exports = function (dataCallback, config) {}
     
-- *dataCallback* - a function should be called everytime the block should be updated. The dataCallback function must be
-  called with an object with the following properties.
+- *dataCallback* - a function that should be called every time the block should be updated. The dataCallback function
+  must be called with an object with the following properties.
     - *full_text* (required) - a string that contains what should show in the block.
     - *short_text* (optional) - a string that contains a shortened version of the full_text.
     - *color* (optional) - the color the make the text in the block.
-- *config* - An object containing all the configuration options set for this block. 
+- *config* - An object containing all the configuration options set for this block.
+  [Possible Options](Configuration.md#ty3status-config).
     
 The function must return an object with the following properties.
 
@@ -75,5 +76,7 @@ Then in your ty3status configuration, you would add the following to your blocks
   interval: 1
 ```
 
-It is best practice to assume your module will be have multiple instances. Because of this, you should take special care
-to make sure that all variables related to the specific instance are not global in the module.
+It is best practice to assume your module will have multiple instances. Because of this, you should take special care to
+make sure that all variables related to the specific instance are not global in the module.
+
+This fact can also be used to share instances to the same underlying system.

@@ -1,9 +1,9 @@
 import {IBlockConfig, IBlockOutput} from "../../models/config-types";
-import {IModule, IModuleConstructor} from "../../models/module-block";
+import {IModule, IModuleFunctionConstructor, IModuleRequiredConstructor} from "../../models/module-block";
 import {CommandRunnerDataError, CommandRunnerRunError, ICommandRunner} from "./command-runner";
 import {EventEmitter} from "events";
 
-const builtinModules: {[module: string]: IModuleConstructor} = {
+const builtinModules: {[module: string]: IModuleFunctionConstructor} = {
     battery: require("../../modules/battery"),
     "cpu-usage": require("../../modules/cpu-usage"),
     datetime: require("../../modules/datetime"),
@@ -52,19 +52,22 @@ export default class ModuleCommandRunner extends EventEmitter implements IComman
 
     private buildInstance() {
         try {
-            let mod: IModuleConstructor;
-
             if (this.module in builtinModules) {
-                mod = builtinModules[this.module];
+                this.instance = builtinModules[this.module](this.onData.bind(this), this.config);
             } else {
                 // Dirty hack to work around webpack
                 // tslint:disable-next-line:no-eval
-                mod = eval("require")(this.module);
+                let mod: any = eval("require")(this.module);
+
+                if (mod.hasOwnProperty("default")) {
+                    this.instance = (<IModuleRequiredConstructor> mod).default(this.onData.bind(this), this.config);
+                } else {
+                    this.instance = (<IModuleFunctionConstructor> mod)(this.onData.bind(this), this.config);
+                }
             }
 
-            this.instance = mod(this.onData.bind(this), this.config);
         } catch (err) {
-            this.emit("error", new CommandRunnerRunError(err.message, err.stack));
+            this.emit("error", new CommandRunnerRunError(`${this.module} ${err.message}`, err.stack));
         }
     }
 

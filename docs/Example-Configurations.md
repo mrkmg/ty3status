@@ -77,4 +77,4 @@ blocks:
 
 ```
 
-More to come!
+Pull requests with your configurations are welcome.

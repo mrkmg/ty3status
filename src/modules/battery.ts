@@ -76,7 +76,7 @@ class BatteryModule extends BaseModule {
 
     private getIcon(state: string, percentage: number): string {
         if (this.config.params.fontAwesome) {
-            if (state === "fully-charged") {
+            if (state === "fully-charged" || state === "charging") {
                 return icons.plug;
             } else if (percentage > 90) {
                 return icons.level_100;

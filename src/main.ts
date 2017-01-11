@@ -98,7 +98,7 @@ function buildBlock(blockConfig: IBlockConfig, name: string) {
     runningBlocks.push(runningBlock);
 
     block.on("data", (data: ICommandRunnerData) => {
-        runningBlock.outputCurrent = xtend(runningBlock.outputCurrent, data);
+        runningBlock.outputCurrent = xtend(runningBlock.outputTemplate, data);
         runOutput();
     });
     block.on("error", onError);
@@ -132,7 +132,7 @@ function onInput(input: Buffer) {
         let events = inputCache.join("").trim().replace(/},{/, `}${EOL}{`).split(EOL);
         for (let i = 0; i < events.length; i++) {
             let event = events[i];
-            // Sent Initially, not an actual event, or empty
+            // Initializer or empty
             if (event === "[" || event === "") {
                 continue;
             }

@@ -5,9 +5,9 @@ import {EOL} from "os";
 import strip = require("striptags");
 
 export default class SimpleOutputter implements IOutputter {
+    private blocks: Array<IBlockOutput> = [];
     private outputLimiter: ActionLimiter;
     private running = false;
-    private blocks: Array<IBlockOutput> = [];
 
     public constructor(speedLimit: number) {
         this.outputLimiter = new ActionLimiter(() => this.writeOutput(), speedLimit);

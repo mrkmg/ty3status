@@ -52,7 +52,7 @@ class MemoryModule extends BaseModule {
         for (let i = 0; i < totalLines; i++) {
             let line = lines[i].split(/\s+/);
 
-            // tslint:disable-next-line
+            // tslint:disable-next-line:switch-default
             switch (line[0]) {
                 case "MemTotal:": memTotal = parseInt(line[1], 10); break;
                 case "MemFree:": memFree = parseInt(line[1], 10); break;

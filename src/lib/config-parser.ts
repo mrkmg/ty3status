@@ -78,15 +78,13 @@ export class ConfigParser {
                 error: "Must be a number",
                 param: "outputSpeedLimit",
             });
-            return;
-        }
 
-        if (this.parsedConfig.outputSpeedLimit <= 0) {
-            this.parseErrors.push({
-                error: "Must be greater than 0",
-                param: "outputSpeedLimit",
-            });
-            return;
+            if (this.parsedConfig.outputSpeedLimit <= 0) {
+                this.parseErrors.push({
+                    error: "Must be greater than 0",
+                    param: "outputSpeedLimit",
+                });
+            }
         }
 
         if (!this.parsedConfig.blocks) {
@@ -94,22 +92,21 @@ export class ConfigParser {
                 error: "Required",
                 param: "blocks",
             });
-            return;
-        }
-        if (!Array.isArray(this.parsedConfig.blocks)) {
-            this.parseErrors.push({
-                error: "Must be an array.",
-                param: "blocks",
-            });
-            return;
+
+            if (!Array.isArray(this.parsedConfig.blocks)) {
+                this.parseErrors.push({
+                    error: "Must be an array.",
+                    param: "blocks",
+                });
+            }
+
+            for (let i = 0; i < this.parsedConfig.blocks.length; i++) {
+                this.validateBlock(this.parsedConfig.blocks[i], `blocks.block[${i}]`);
+            }
         }
 
         if ("defaults" in this.parsedConfig) {
             this.validateBlock(this.parsedConfig.defaults, `defaults`);
-        }
-
-        for (let i = 0; i < this.parsedConfig.blocks.length; i++) {
-            this.validateBlock(this.parsedConfig.blocks[i], `blocks.block[${i}]`);
         }
 
         if (this.parseErrors.length) {
