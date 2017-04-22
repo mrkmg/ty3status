@@ -68,7 +68,7 @@ export class ConfigParser {
         }
 
         if (!this.parsedConfig.outputSpeedLimit) {
-            this.parsedConfig.outputSpeedLimit = 500;
+            this.parsedConfig.outputSpeedLimit = 100;
         }
     }
 

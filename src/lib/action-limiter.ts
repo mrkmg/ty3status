@@ -1,4 +1,4 @@
-import {setImmediate, setTimeout} from "timers";
+import {clearTimeout, setImmediate, setTimeout} from "timers";
 
 export default class ActionLimiter {
     private delayTimer: NodeJS.Timer;

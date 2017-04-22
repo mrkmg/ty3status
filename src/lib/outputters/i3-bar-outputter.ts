@@ -15,7 +15,7 @@ export default class I3BarOutputter implements IOutputter {
 
     public setBlocks(blocks: Array<IBlockOutput>): void {
         this.blocks = blocks;
-        this.writeOutput();
+        this.outputLimiter.run();
     }
 
     public start(): void {
