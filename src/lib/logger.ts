@@ -49,7 +49,8 @@ export class Logger {
         }
 
         if (this.isWriting) {
-            return setImmediate(() => this.write(data));
+            setImmediate(() => this.write(data));
+            return;
         }
 
         this.isWriting = true;

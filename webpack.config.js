@@ -1,18 +1,19 @@
 var WebpackOnBuildPlugin = require('on-build-webpack');
 var execSync = require('child_process').execSync;
-var path = require('path');
 
 module.exports = {
     entry: './src/main.ts',
     target: 'node',
+    mode: "production",
     output: {
-        filename: './build/ty3status.js'
+        filename: 'ty3status.js',
+        path: __dirname + "/build"
     },
     resolve: {
-        extensions: ['', '.webpack.js', '.ts', '.js']
+        extensions: ['.webpack.js', '.ts', '.js']
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.ts$/,
                 loader: 'ts-loader'
@@ -24,6 +25,5 @@ module.exports = {
         {
             execSync("npm run bin");
         })
-    ],
-    devtool: 'inline-source-map'
+    ]
 };

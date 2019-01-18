@@ -4,7 +4,7 @@ import ParsedArgs = minimist.ParsedArgs;
 
 export default function parseArgs(): ITy3CLIArguments {
     let passedArgs = <IParsedArgumentsTy3> minimist(process.argv.slice(2), {
-        boolean: ["simple"],
+        boolean: ["simple", "null"],
         string: ["config"],
         unknown: (opt: string): boolean => {
             process.stderr.write(`Unknown option: ${opt}`);
@@ -16,6 +16,7 @@ export default function parseArgs(): ITy3CLIArguments {
 
     return {
         config: passedArgs.config,
+        null: passedArgs.null,
         simple: passedArgs.simple,
     };
 }
@@ -23,9 +24,11 @@ export default function parseArgs(): ITy3CLIArguments {
 export interface IParsedArgumentsTy3 extends ParsedArgs {
     config: string;
     simple: boolean;
+    null: boolean;
 }
 
 export interface ITy3CLIArguments {
     config: string | null;
     simple: boolean;
+    null: boolean;
 }

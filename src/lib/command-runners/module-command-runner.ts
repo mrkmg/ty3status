@@ -4,8 +4,9 @@ import {CommandRunnerDataError, CommandRunnerRunError, ICommandRunner} from "./c
 import {EventEmitter} from "events";
 
 const builtinModules: {[module: string]: IModuleFunctionConstructor} = {
-    battery: require("../../modules/battery"),
+    "cpu-temp": require("../../modules/cpu-temp"),
     "cpu-usage": require("../../modules/cpu-usage"),
+    battery: require("../../modules/battery"),
     datetime: require("../../modules/datetime"),
     loadavg: require("../../modules/loadavg"),
     memory: require("../../modules/memory"),

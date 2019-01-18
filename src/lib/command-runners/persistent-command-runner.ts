@@ -4,6 +4,7 @@ import {EventEmitter} from "events";
 import {EOL} from "os";
 import {clearTimeout, setTimeout} from "timers";
 import xtend = require("xtend");
+import ProcessEnv = NodeJS.ProcessEnv;
 
 export default class PersistentCommandRunner extends EventEmitter implements ICommandRunner {
     private process: ChildProcess;
@@ -15,6 +16,9 @@ export default class PersistentCommandRunner extends EventEmitter implements ICo
     }
 
     public start(): void {
+        if (this.running) {
+            this.stop();
+        }
         this.runProcess({});
     }
 
@@ -35,7 +39,6 @@ export default class PersistentCommandRunner extends EventEmitter implements ICo
     public click(button: number): void {
         this.process.stdin.write(button.toString());
     }
-
     private runProcess(vars: Object): void {
         if (this.running) {
             return;
@@ -84,6 +87,6 @@ export default class PersistentCommandRunner extends EventEmitter implements ICo
     }
 }
 
-function getEnvironment(vars: Object) {
+function getEnvironment(vars: any): ProcessEnv {
     return xtend(process.env, vars);
 }

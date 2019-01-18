@@ -52,6 +52,32 @@ If your have the interval set for 5 seconds, each update will show the percentag
   interval: 5
 ```
 
+### cpu-temp
+
+Displays current cpu temp.
+
+- averageLength - The numbers of samples to average.
+- pollFrequency - How often to poll temperature.
+- safeColor - Color for safe temp.
+- warningColor - Color for warning temp.
+- warningTemp - Warning Temp.
+- dangerColor - Color for danger temp.
+- dangerTemp - Danger temp.
+
+```yaml
+- type: module
+  module: cpu-temp
+  interval: 1
+  params:
+    averageLength: 200
+    pollFrequency: 10
+    safeColor: "#00FF00"
+    warningColor: "#FFFF00"
+    warningTemp: 70
+    dangerColor: "#FF0000"
+    dangerTemp: 80
+```
+
 ### datetime
 
 Displays the current date and time. The format is displayed using the formatting options defined in

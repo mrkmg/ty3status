@@ -13,6 +13,8 @@ import {EOL} from "os";
 import defaultValue = require("default-value");
 import xtend = require("xtend");
 import "source-map-support/register";
+import Signals = NodeJS.Signals;
+import NullOutputter from "./lib/outputters/null-outputter";
 
 let args: ITy3CLIArguments;
 let configPath: string;
@@ -30,9 +32,13 @@ function main() {
     args = parseArgs();
     makeConfig();
     buildBlocks();
-    outputter = args.simple ?
-        new SimpleOutputter(config.outputSpeedLimit) :
-        new I3BarOutputter(config.outputSpeedLimit);
+    if (args.null) {
+        outputter = new NullOutputter();
+    } else if (args.simple) {
+        outputter = new SimpleOutputter(config.outputSpeedLimit);
+    } else {
+        outputter = new I3BarOutputter(config.outputSpeedLimit)
+    }
     outputter.start();
     startBlocks();
     bindStdin();
@@ -104,7 +110,7 @@ function buildBlock(blockConfig: IBlockConfig, name: string) {
     block.on("error", onError);
 
     if (blockConfig.signal) {
-        process.on(blockConfig.signal, () => {
+        process.on(blockConfig.signal as Signals, () => {
             block.start();
         });
     }
@@ -175,7 +181,6 @@ function onError(error: Error) {
         throw error;
     }
 }
-
 
 interface II3Event {
     y: number;
