@@ -21,7 +21,7 @@ class LoadAvgModule extends BaseModule {
     }
 
     protected onTick(): void {
-        let [o1, o5, o15] = loadavg();
+        const [o1, o5, o15] = loadavg();
         let str = "";
 
         if (this.config.params.o1) {

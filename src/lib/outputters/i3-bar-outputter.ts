@@ -4,7 +4,7 @@ import ActionLimiter from "../action-limiter";
 import {EOL} from "os";
 
 export default class I3BarOutputter implements IOutputter {
-    private blocks: Array<IBlockOutput> = [];
+    private blocks: IBlockOutput[] = [];
     private didOutputHeader = false;
     private outputLimiter: ActionLimiter;
     private running = false;
@@ -13,7 +13,7 @@ export default class I3BarOutputter implements IOutputter {
         this.outputLimiter = new ActionLimiter(() => this.writeOutput(), speedLimit);
     }
 
-    public setBlocks(blocks: Array<IBlockOutput>): void {
+    public setBlocks(blocks: IBlockOutput[]): void {
         this.blocks = blocks;
         this.outputLimiter.run();
     }

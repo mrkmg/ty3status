@@ -9,7 +9,7 @@ import ProcessEnv = NodeJS.ProcessEnv;
 export default class PersistentCommandRunner extends EventEmitter implements ICommandRunner {
     private process: ChildProcess;
     private running: boolean = false;
-    private currentData: Array<string> = [];
+    private currentData: string[] = [];
 
     constructor(private command: string) {
         super();
@@ -24,7 +24,7 @@ export default class PersistentCommandRunner extends EventEmitter implements ICo
 
     public stop(): void {
         if (this.running) {
-            let timer = setTimeout(() => this.kill(), 2000);
+            const timer = setTimeout(() => this.kill(), 2000);
             this.on("stopped", () => clearTimeout(timer));
             this.process.kill("SIGINT");
         }
@@ -39,7 +39,7 @@ export default class PersistentCommandRunner extends EventEmitter implements ICo
     public click(button: number): void {
         this.process.stdin.write(button.toString());
     }
-    private runProcess(vars: Object): void {
+    private runProcess(vars: any): void {
         if (this.running) {
             return;
         }
@@ -73,7 +73,7 @@ export default class PersistentCommandRunner extends EventEmitter implements ICo
         this.currentData.push(data);
 
         if (data.indexOf(EOL) !== -1) {
-            let [dataLine, ...remaining] = this.currentData.join("").trim().split(EOL);
+            const [dataLine, ...remaining] = this.currentData.join("").trim().split(EOL);
             this.currentData = remaining;
             this.emit("data", {
                 full_text: dataLine,

@@ -1,12 +1,12 @@
 import {clearTimeout, setImmediate, setTimeout} from "timers";
 
 export default class ActionLimiter {
-    private delayTimer: NodeJS.Timer;
+    private delayTimer: NodeJS.Timeout;
     private isWaiting: boolean = false;
     private runAfterWait: boolean = false;
 
     constructor(private action: () => void, private delay: number) {
-    };
+    }
 
     public run(): void {
         if (this.isWaiting) {

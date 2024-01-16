@@ -22,7 +22,7 @@ class BatteryModule extends BaseModule {
     private upowerDataGetRunning = false;
     private upowerMonitorRunning = false;
     private upowerMonitorProcess: ChildProcess;
-    private upowerMonitorTimeout: NodeJS.Timer;
+    private upowerMonitorTimeout: NodeJS.Timeout;
 
     constructor(dataCallback: IModuleDataFunction, config: IBlockConfig) {
         super(dataCallback, config);
@@ -61,7 +61,7 @@ class BatteryModule extends BaseModule {
             fullText += ` (${data.timeCharging})`;
         }
 
-        let outputData: IBlockOutput = {
+        const outputData: IBlockOutput = {
             color: percentageToColor(data.percentage),
             full_text: fullText,
             short_text: data.percentage.toString(),
@@ -133,7 +133,7 @@ class BatteryModule extends BaseModule {
 
         let rawOutput: string = "";
 
-        let upowerProcess: ChildProcess = spawn("upower", [
+        const upowerProcess: ChildProcess = spawn("upower", [
             "-i",
             `/org/freedesktop/UPower/devices/battery_${this.config.params.battery}`,
         ]);
@@ -162,11 +162,11 @@ class BatteryModule extends BaseModule {
         let timeCharging: string = "";
         let timeDischarging: string = "";
 
-        let lines = rawOutput.split(/\n/g);
+        const lines = rawOutput.split(/\n/g);
 
-        let outputLength = lines.length;
+        const outputLength = lines.length;
         let line: string;
-        let matches: Array<string>;
+        let matches: string[];
         let option: string;
         let value: string;
         for (let i = 0; i < outputLength; i++) {

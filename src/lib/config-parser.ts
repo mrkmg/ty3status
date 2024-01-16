@@ -1,7 +1,7 @@
 import {EBlockConfigType, IBlockConfig, IBlocksConfig} from "../models/config-types";
 import {Ty3Error} from "../models/ty3error";
 import {readFileSync} from "fs";
-import {safeLoad as yaml} from "js-yaml";
+import {load as yaml} from "js-yaml";
 import {EOL} from "os";
 import xtend = require("xtend");
 
@@ -12,7 +12,7 @@ export default function configParser(filePath: string): IBlocksConfig {
 export class ConfigParser {
     private fileContents: string;
     private parsedConfig: IBlocksConfig;
-    private parseErrors: Array<IConfigParseError> = [];
+    private parseErrors: IConfigParseError[] = [];
 
     constructor(private filePath: string) {
         this.readFile();
@@ -35,12 +35,12 @@ export class ConfigParser {
 
     private parseFile() {
         try {
-            let parsedFile = yaml(this.fileContents);
+            const parsedFile = yaml(this.fileContents) as IBlocksConfig;
             // Convert string to enums
             if ("blocks" in parsedFile && Array.isArray(parsedFile.blocks)) {
                 for (let i = 0; i < parsedFile.blocks.length; i++) {
                     if ("type" in parsedFile.blocks[i]) {
-                        parsedFile.blocks[i].type = EBlockConfigType[parsedFile.blocks[i].type];
+                        parsedFile.blocks[i].type = EBlockConfigType[parsedFile.blocks[i].type] as unknown as EBlockConfigType;
                     }
                 }
             }
@@ -52,7 +52,7 @@ export class ConfigParser {
     }
 
     private mergeDefaults() {
-        let reqDefaults: IBlockConfig = {
+        const reqDefaults: IBlockConfig = {
             ignoreError: true,
             interval: 30,
             markup: "none",
@@ -115,8 +115,8 @@ export class ConfigParser {
     }
 
     private validateBlock(block: IBlockConfig, path: string) {
-        for (let prop in block) {
-            if (block.hasOwnProperty(prop)) {
+        for (const prop in block) {
+            if (Object.hasOwn(block, prop)) {
                 switch (prop) {
                     case "type":
                         if (!(block.type in EBlockConfigType)) {
@@ -454,7 +454,7 @@ export class ConfigFileError extends Ty3Error {
 }
 
 export class ValidationError extends Ty3Error {
-    constructor(private errors: Array<IConfigParseError>) {
+    constructor(private errors: IConfigParseError[]) {
         super("Validation Error");
     }
 

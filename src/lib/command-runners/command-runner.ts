@@ -4,28 +4,22 @@ import {EventEmitter} from "events";
 export interface ICommandRunner extends EventEmitter {
     addListener(event: "data", listener: ICommandRunnerDataListener): this;
     addListener(event: "error", listener: ICommandRunnerErrorListener): this;
-    addListener(event: "started", listener: Function): this;
-    addListener(event: "stopped", listener: Function): this;
+    addListener(event: "started" | "stopped", listener: () => void): this;
 
-    emit(event: "data", data: ICommandRunnerData): boolean;
-    emit(event: "error", error: ICommandRunnerData): boolean;
-    emit(event: "started"): boolean;
-    emit(event: "stopped"): boolean;
+    emit(event: "data" | "error", data: ICommandRunnerData): boolean;
+    emit(event: "started" | "stopped"): boolean;
 
     on(event: "data", listener: ICommandRunnerDataListener): this;
     on(event: "error", listener: ICommandRunnerErrorListener): this;
-    on(event: "started", listener: Function): this;
-    on(event: "stopped", listener: Function): this;
+    on(event: "started" | "stopped", listener: () => void): this;
 
     once(event: "data", listener: ICommandRunnerDataListener): this;
     once(event: "error", listener: ICommandRunnerErrorListener): this;
-    once(event: "started", listener: Function): this;
-    once(event: "stopped", listener: Function): this;
+    once(event: "started" | "stopped", listener: () => void): this;
 
     removeListener(event: "data", listener: ICommandRunnerDataListener): this;
     removeListener(event: "error", listener: ICommandRunnerErrorListener): this;
-    removeListener(event: "started", listener: Function): this;
-    removeListener(event: "stopped", listener: Function): this;
+    removeListener(event: "started" | "stopped", listener: () => void): this;
 
     start(): void;
     stop(): void;
@@ -33,8 +27,8 @@ export interface ICommandRunner extends EventEmitter {
     kill(): void;
 }
 
-export interface ICommandRunnerDataListener { (data: ICommandRunnerData): void; }
-export interface ICommandRunnerErrorListener { (error: CommandRunnerError): void; }
+export type ICommandRunnerDataListener = (data: ICommandRunnerData) => void;
+export type ICommandRunnerErrorListener = (error: CommandRunnerError) => void;
 
 export interface ICommandRunnerData {
     full_text: string;

@@ -7,8 +7,8 @@ export interface IModule {
     tick(): void;
 }
 
-export interface IModuleFunctionConstructor { (dataCallback: IModuleDataFunction, params: IBlockConfig): IModule; }
+export type IModuleFunctionConstructor = (dataCallback: IModuleDataFunction, params: IBlockConfig) => IModule;
 export interface IModuleRequiredConstructor {
     default: IModuleFunctionConstructor;
 }
-export interface IModuleDataFunction  { (data: IBlockOutput):void; }
+export type IModuleDataFunction = (data: IBlockOutput) => void;

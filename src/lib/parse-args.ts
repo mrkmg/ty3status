@@ -3,7 +3,7 @@ import {EOL} from "os";
 import ParsedArgs = minimist.ParsedArgs;
 
 export default function parseArgs(): ITy3CLIArguments {
-    let passedArgs = <IParsedArgumentsTy3> minimist(process.argv.slice(2), {
+    const passedArgs = minimist(process.argv.slice(2), {
         boolean: ["simple", "null"],
         string: ["config"],
         unknown: (opt: string): boolean => {
@@ -12,7 +12,7 @@ export default function parseArgs(): ITy3CLIArguments {
             process.exit(1);
             return false;
         },
-    });
+    }) as IParsedArgumentsTy3;
 
     return {
         config: passedArgs.config,

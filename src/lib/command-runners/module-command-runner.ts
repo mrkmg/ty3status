@@ -57,14 +57,11 @@ export default class ModuleCommandRunner extends EventEmitter implements IComman
                 this.instance = builtinModules[this.module](this.onData.bind(this), this.config);
             } else {
                 // Dirty hack to work around webpack
-                // tslint:disable-next-line:no-eval
-                let mod: any = eval("require")(this.module);
+                const mod: any = eval("require")(this.module);
 
-                if (mod.hasOwnProperty("default")) {
-                    this.instance = (<IModuleRequiredConstructor> mod).default(this.onData.bind(this), this.config);
-                } else {
-                    this.instance = (<IModuleFunctionConstructor> mod)(this.onData.bind(this), this.config);
-                }
+                this.instance = Object.hasOwn(mod, "default")
+                    ? (mod as IModuleRequiredConstructor).default(this.onData.bind(this), this.config)
+                    : (mod as IModuleFunctionConstructor)(this.onData.bind(this), this.config);
             }
 
         } catch (err) {
@@ -146,7 +143,7 @@ export default class ModuleCommandRunner extends EventEmitter implements IComman
         if (
             "align" in data &&
             typeof data.align !== "string" &&
-            !(<string> data.align in ["left", "center", "right"])
+            !((data.align as string) in ["left", "center", "right"])
         ) {
             this.emit("error", new CommandRunnerDataError("align"));
             return false;

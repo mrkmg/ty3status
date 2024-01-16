@@ -1,7 +1,7 @@
 import BaseModule from "../lib/base-module";
 import {IBlockConfig} from "../models/config-types";
 import {IModuleDataFunction} from "../models/module-block";
-import dateformat = require("dateformat");
+import dateformat  from "dateformat";
 import xtend = require("xtend");
 
 export = (dataCallback: IModuleDataFunction, config: IBlockConfig) => {

@@ -25,9 +25,9 @@ class UptimeModule extends BaseModule {
     }
 
     private makeTime(time: number): string {
-        let hours = Math.floor(time / 3600);
+        const hours = Math.floor(time / 3600);
         time -= hours * 3600;
-        let min = Math.floor(time / 60);
+        const min = Math.floor(time / 60);
         time -= min * 60;
 
         if (this.config.params.showSeconds) {

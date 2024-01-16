@@ -3,7 +3,7 @@ import {IModule, IModuleDataFunction} from "../models/module-block";
 import {clearInterval, setInterval} from "timers";
 
 export default class BaseModule implements IModule {
-    protected timer: NodeJS.Timer;
+    protected timer: NodeJS.Timeout;
     protected running: boolean = false;
 
     constructor(protected dataCallback: IModuleDataFunction, protected config: IBlockConfig) {
@@ -15,7 +15,7 @@ export default class BaseModule implements IModule {
             return;
         }
 
-        let timeout = this.config.interval * 1000;
+        const timeout = this.config.interval * 1000;
 
         if (!this.running) {
             this.onTick();
@@ -31,6 +31,7 @@ export default class BaseModule implements IModule {
         }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public clicked(button: number): void {
         this.onTick();
     }

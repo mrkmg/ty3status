@@ -2,7 +2,8 @@ import {IBlockOutput} from "../../models/config-types";
 import {IOutputter} from "../../models/outputter";
 
 export default class NullOutputter implements IOutputter {
-    public setBlocks(blocks: Array<IBlockOutput>): void {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public setBlocks(blocks: IBlockOutput[]): void {
     }
 
     public start(): void {

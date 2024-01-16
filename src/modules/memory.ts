@@ -18,7 +18,7 @@ class MemoryModule extends BaseModule {
     }
 
     private outputMemData(data: IMemUsage) {
-        let percentage = Math.round(((data.total - data.free) / data.total) * 100);
+        const percentage = Math.round(((data.total - data.free) / data.total) * 100);
 
         this.dataCallback({
             full_text: `${(data.total - data.free).toFixed(1)}/${data.total.toFixed(1)} (${percentage}%)`,
@@ -46,11 +46,11 @@ class MemoryModule extends BaseModule {
         let buffers = 0;
         let cached = 0;
 
-        let lines = data.split(/\n/g);
-        let totalLines = lines.length;
+        const lines = data.split(/\n/g);
+        const totalLines = lines.length;
 
         for (let i = 0; i < totalLines; i++) {
-            let line = lines[i].split(/\s+/);
+            const line = lines[i].split(/\s+/);
 
             // tslint:disable-next-line:switch-default
             switch (line[0]) {

@@ -4,6 +4,11 @@ defaults:
 
 blocks:
 - type: module
+  module: battery
+  interval: 5
+  prefix: 'BAT: '
+
+- type: module
   module: cpu-usage
   interval: 5
   prefix: 'CPU: '

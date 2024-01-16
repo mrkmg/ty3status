@@ -12,14 +12,14 @@ import {Ty3Error} from "./models/ty3error";
 import {EOL} from "os";
 import defaultValue = require("default-value");
 import xtend = require("xtend");
-import "source-map-support/register";
+import "source-map-support";
 import Signals = NodeJS.Signals;
 import NullOutputter from "./lib/outputters/null-outputter";
 
 let args: ITy3CLIArguments;
 let configPath: string;
 let config: IBlocksConfig;
-let runningBlocks: Array<IRunningBlock> = [];
+const runningBlocks: IRunningBlock[] = [];
 let outputter: IOutputter;
 
 try {
@@ -49,12 +49,7 @@ function bindStdin() {
 }
 
 function makeConfig() {
-    if (args.config) {
-        configPath = args.config;
-    } else {
-        configPath = getDefaultConfigPath();
-    }
-
+    configPath = args.config ? args.config : getDefaultConfigPath();
     config = configParser(configPath);
 }
 
@@ -65,8 +60,8 @@ function buildBlocks() {
 }
 
 function buildBlock(blockConfig: IBlockConfig, name: string) {
-    let block = new Block(blockConfig);
-    let initialOutput: IBlockOutput = {
+    const block = new Block(blockConfig);
+    const initialOutput: IBlockOutput = {
         color: blockConfig.color,
         full_text: "",
         markup: blockConfig.markup,
@@ -95,7 +90,7 @@ function buildBlock(blockConfig: IBlockConfig, name: string) {
         initialOutput.min_width = blockConfig.minWidth;
     }
 
-    let runningBlock = {
+    const runningBlock = {
         block,
         outputCurrent: xtend(initialOutput),
         outputTemplate: xtend(initialOutput),
@@ -123,19 +118,19 @@ function runOutput() {
 
 function startBlocks() {
     for (let i = 0; i < runningBlocks.length; i++) {
-        let block = runningBlocks[i].block;
+        const block = runningBlocks[i].block;
 
         block.start();
     }
 }
 
-let inputCache: Array<string> = [];
+let inputCache: string[] = [];
 
 function onInput(input: Buffer) {
     inputCache.push(input.toString());
 
     if (input.indexOf(EOL) !== -1) {
-        let events = inputCache.join("").trim().replace(/},{/, `}${EOL}{`).split(EOL);
+        const events = inputCache.join("").trim().replace(/},{/, `}${EOL}{`).split(EOL);
         for (let i = 0; i < events.length; i++) {
             let event = events[i];
             // Initializer or empty
@@ -157,11 +152,11 @@ function onInput(input: Buffer) {
 function onEvent(event: string) {
     try {
         event = event.replace(/'/g, "\"");
-        let jsonEvent = <II3Event> JSON.parse(event.replace(/'/, "\""));
-        let index = parseInt(jsonEvent.name, 10);
+        const jsonEvent = JSON.parse(event.replace(/'/, "\"")) as II3Event;
+        const index = parseInt(jsonEvent.name, 10);
 
         if (index >= 0 && index < runningBlocks.length) {
-            let runningBlock = runningBlocks[index];
+            const runningBlock = runningBlocks[index];
             runningBlock.block.click(jsonEvent.button);
         }
 

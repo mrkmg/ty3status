@@ -1,8 +1,0 @@
-{
-    "extends": "tslint:latest",
-    "rules": {
-        "whitespace": [
-            true, "check-branch", "check-operator", "check-typecast"
-        ]
-    }
-}

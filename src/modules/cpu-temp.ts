@@ -12,7 +12,7 @@ export = (dataCallback: IModuleDataFunction, config: IBlockConfig) => {
 class CpuTempModule extends BaseModule {
     private thermalZones: string[];
     private temps: number[] = [];
-    private pollInterval: NodeJS.Timer = null;
+    private pollInterval: NodeJS.Timeout = null;
 
     constructor(dataCallback: IModuleDataFunction, config: IBlockConfig) {
         super(dataCallback, config);
@@ -62,7 +62,7 @@ class CpuTempModule extends BaseModule {
     }
 
     private getTemp() {
-        let temps: number[] = [];
+        const temps: number[] = [];
         for (const zone of this.thermalZones) {
             temps.push(this.getTempOfZone(zone));
         }
@@ -80,7 +80,7 @@ class CpuTempModule extends BaseModule {
     private getThermalZones() {
         const result = readdirSync("/sys/class/thermal/");
 
-        let thermalZones: string[] = [];
+        const thermalZones: string[] = [];
 
         for (const obj of result) {
             if (/^thermal_zone\d/.test(obj)) {

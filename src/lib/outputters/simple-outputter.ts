@@ -5,7 +5,7 @@ import {EOL} from "os";
 import strip = require("striptags");
 
 export default class SimpleOutputter implements IOutputter {
-    private blocks: Array<IBlockOutput> = [];
+    private blocks: IBlockOutput[] = [];
     private outputLimiter: ActionLimiter;
     private running = false;
 
@@ -13,7 +13,7 @@ export default class SimpleOutputter implements IOutputter {
         this.outputLimiter = new ActionLimiter(() => this.writeOutput(), speedLimit);
     }
 
-    public setBlocks(blocks: Array<IBlockOutput>): void {
+    public setBlocks(blocks: IBlockOutput[]): void {
         this.blocks = blocks;
         this.outputLimiter.run();
     }
@@ -33,7 +33,7 @@ export default class SimpleOutputter implements IOutputter {
         }
 
         for (let i = 0; i < this.blocks.length; i++) {
-            let runningBlock = this.blocks[i];
+            const runningBlock = this.blocks[i];
             if (!showOutput(runningBlock)) {
                 continue;
             }

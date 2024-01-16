@@ -16,7 +16,7 @@ import {clearTimeout, setTimeout} from "timers";
 export default class Block extends EventEmitter implements IBlockEvents {
     private commandRunner: ICommandRunner;
     private retryCount: number = 0;
-    private retryTimer: NodeJS.Timer;
+    private retryTimer: NodeJS.Timeout;
 
     constructor(public config: IBlockConfig) {
         super();
@@ -101,8 +101,7 @@ export interface IBlockEvents extends EventEmitter {
     addListener(event: "data", listener: ICommandRunnerDataListener): this;
     addListener(event: "error", listener: ICommandRunnerErrorListener): this;
 
-    emit(event: "data", data: ICommandRunnerData): boolean;
-    emit(event: "error", error: ICommandRunnerData): boolean;
+    emit(event: "data" | "error", data: ICommandRunnerData): boolean;
 
     on(event: "data", listener: ICommandRunnerDataListener): this;
     on(event: "error", listener: ICommandRunnerErrorListener): this;

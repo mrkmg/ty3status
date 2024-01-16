@@ -1,6 +1,6 @@
 export interface IBlocksConfig {
     outputSpeedLimit: number;
-    blocks: Array<IBlockConfig>;
+    blocks: IBlockConfig[];
     defaults?: IBlockConfig;
 }
 
@@ -21,7 +21,7 @@ export interface IBlockConfig {
     color?: string;
     instance?: string;
     interval?: number;
-    minWidth?: number & string;
+    minWidth?: number | string;
     module?: string;
     params?: any;
     postfix?: string;

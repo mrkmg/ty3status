@@ -11,7 +11,7 @@ export default class LegacyShellCommandRunner extends EventEmitter implements IC
     private process: ChildProcess;
     private running: boolean = false;
     private currentData: string[];
-    private timer: NodeJS.Timer = null;
+    private timer: NodeJS.Timeout = null;
 
     constructor(private command: string, private interval: number = 30000, private instance?: string) {
         super();
@@ -36,7 +36,7 @@ export default class LegacyShellCommandRunner extends EventEmitter implements IC
         }
 
         if (this.running) {
-            let timer = setTimeout(() => this.kill(), 2000);
+            const timer = setTimeout(() => this.kill(), 2000);
             this.on("stopped", () => clearTimeout(timer));
             this.process.kill("SIGINT");
         }
@@ -50,7 +50,7 @@ export default class LegacyShellCommandRunner extends EventEmitter implements IC
     }
 
     public click(button: number): void {
-        let env = {
+        const env = {
             BLOCK_BUTTON: button,
         };
 
@@ -61,7 +61,7 @@ export default class LegacyShellCommandRunner extends EventEmitter implements IC
         }
     }
 
-    private runProcess(env: Object = {}): void {
+    private runProcess(env: any = {}): void {
         if (this.running) {
             return;
         }
@@ -101,7 +101,7 @@ export default class LegacyShellCommandRunner extends EventEmitter implements IC
     }
 
     private onProcessCompleted() {
-        let lines: Array<string>;
+        let lines: string[];
 
         if (this.currentData.length) {
             lines = this.currentData.join("").trim().split(EOL);
@@ -110,7 +110,7 @@ export default class LegacyShellCommandRunner extends EventEmitter implements IC
             return;
         }
 
-        let length = lines.length;
+        const length = lines.length;
 
         switch (length) {
             case 1:

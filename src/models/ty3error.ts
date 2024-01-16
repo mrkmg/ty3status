@@ -8,5 +8,5 @@ export class Ty3Error extends Error {
     public display(): void {
         process.stderr.write(this.message);
         process.stderr.write(EOL);
-    };
+    }
 }
