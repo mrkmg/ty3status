@@ -35,7 +35,7 @@ Change your status line program in your i3 config to ty3status.
 
 Create a ty3status config file for your user account.
 
-    cp /etc/ty3bar.yaml ~/.config/ty3status.yaml
+    cp /etc/ty3status.yaml ~/.config/ty3status.yaml
     
 Modify the file as needed, then restart i3.
 
@@ -54,7 +54,7 @@ Modify the file as needed, then restart i3.
 
 The MIT License (MIT) 
 
-Copyright (c) 2016 Kevin Gravier
+Copyright (c) 2016-2024 Kevin Gravier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation the
